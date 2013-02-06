@@ -4,6 +4,11 @@ use strict;
 use integer;
 
 use vars qw( %a2b );
+use vars qw( $dot_locator_for_use );
+use vars qw( $numeric_indicator );
+
+$dot_locator_for_use = '⠐⠐⠿';
+$numeric_indicator = '⠼';
 
 sub read_data () {
     my $input = 'a2b.txt';

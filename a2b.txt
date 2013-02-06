@@ -44,3 +44,8 @@ z	⠵
 ₦	⠈⠝
 $	⠈⠎
 ¥	⠈⠽
+
+#3.11 degress and seconds
+°	⠘⠚
+
+# 3.12 ditto
