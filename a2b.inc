@@ -167,6 +167,24 @@ function ueb_encode($t) {
 	    } /* for */
 	    $it .= $w;
 
+	} elseif ($type == 'punct1') {
+	    # See The Rules of Unified English Braille, §6.2.1 (p. 60)
+	    if ($mode_numeric && $i <= count($t) && $t[$i + 1][0] == 'numeric') {
+		for ($j = 0; $j < mb_strlen($data); $j += 1) {
+		    $c = mb_substr($data, $j, 1);
+		    if ($c == '/') {
+			$it .= '⠌'; # FIXME
+		    } else {
+			$it .= ueb_a2b($c);
+		    } /* if */
+		} /* for */
+	    } else {
+		$mode_numeric = false;
+		for ($j = 0; $j < mb_strlen($data); $j += 1) {
+		    $it .= ueb_a2b(mb_substr($data, $j, 1));
+		} /* for */
+	    } /* if */
+
 	} elseif ($type == 'space') {
 	    # See The Rules of Unified English Braille, §6.2.1 (p. 60)
 	    if ($mode_numeric && $i <= count($t) && $t[$i + 1][0] == 'numeric') {
