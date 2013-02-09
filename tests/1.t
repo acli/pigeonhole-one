@@ -25,6 +25,18 @@ class Grade1TestCase extends UnitTestCase {
 	$this->assertEqual(translate_to_braille('1'), '⠼⠁');
     }
 
+    function test_braille_of_digits_1234567890() {
+	$this->assertEqual(translate_to_braille('1234567890'), '⠼⠁⠃⠉⠙⠑⠋⠛⠓⠊⠚');
+    }
+
+    function test_braille_of_a1() {
+	$this->assertEqual(translate_to_braille('a1'), '⠁⠼⠁');
+    }
+
+    function test_braille_of_1a() {
+	$this->assertEqual(translate_to_braille('1a'), '⠼⠁⠰⠁');
+    }
+
 }
 
 ?>
