@@ -28,21 +28,16 @@ sub read_data () {
     close INPUT;
 }
 
+sub tokenize ($) {
+    my($s) = @_;
+}
+
 sub translate ($) {
     my($s) = @_;
-    my $it = '';
-    for (my $i = 0; $i < length $s; $i += 1) {
-	my $c = substr($s, $i, 1);
-	if ($c eq ' ') {
-	    $it .= $c;
-	} elsif (defined $a2b{$c}) {
-	    $it .= $a2b{$c};
-	} else {
-	    print STDERR "Warning: No mapping for character `$c'\n";
-	}
-    }
+    my $tokens = tokenize $s;
+    my $it = $tokens;
     return $it;
 }
 
 read_data;
-printf "%s\n", translate join(' ', @ARGV);
+printf "%s\n", (@ARGV? translate join(' ', @ARGV): scalar <>);
