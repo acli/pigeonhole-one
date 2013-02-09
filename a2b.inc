@@ -28,7 +28,6 @@ function ueb_read_data() {
 	die;
     }
     fclose($h);
-    var_dump($a2b);
 } /* ueb_read_data */
 
 # FIXME BEGIN
@@ -39,10 +38,12 @@ ob_start('mb_output_handler');
 function ueb_tokenize($s) {
     $tokens = array();
     while (mb_strlen($s)) {
-	if (preg_match('/^([a-z]+)(.*)$/', $s, $matches)) {
+	if (preg_match('/^([a-z]+)(.*)$/u', $s, $matches)) {
 	    array_push($tokens, array('alpha', $matches[1]));
 	    $s = $matches[2];
-	    print "GOT HERE\n";
+	} elseif (preg_match('/^(\s+)(.*)$/u', $s, $matches)) {
+	    array_push($tokens, array('space', $matches[1]));
+	    $s = $matches[2];
 	} else {
 	    print "OOPS\n";
 	    die;
@@ -58,19 +59,24 @@ function ueb_encode($t) {
     for ($i = 0; $i < count($t); $i += 1) {
 	$type = $t[$i][0];
 	$data = $t[$i][1];
+	print "DEBUG: type=($type), data=($data)\n";
 	if ($type == 'alpha') {
-	    $t = '';
+	    $w = '';
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		$c = mb_substr($data, $j, 1);
 		if (array_key_exists($c, $a2b)) {
-		    $t .= $a2b[$c];
+		    $w .= $a2b[$c];
 		} else {
 		    print "OOPS, unhandled $type character $c\n";
 		    die;
 		} /* if */
 	    } /* for */
-	    print "DEBUG: t=($t)\n";
-	    $it .= $t;
+	    $it .= $w;
+	} elseif ($type == 'space') {
+	    $it .= $data;
+	} else {
+	    print "FIXME: unhandled type \"$type\"\n";
+	    die;
 	} /* if */
     } /* for */
     return $it;
