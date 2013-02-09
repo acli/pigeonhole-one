@@ -75,6 +75,14 @@ function ueb_tokenize($s) {
     return $tokens;
 } /* ueb_tokenize */
 
+function ueb_a2b($c) {
+    global $a2b;
+    if (!array_key_exists($c, $a2b)) {
+	throw new Exception("unhandled character $c");
+    } /* if */
+    return $a2b[$c];
+} /* ueb_a2b */
+
 function ueb_encode($t) {
     global $a2b;
     global $n2a;
@@ -98,12 +106,7 @@ function ueb_encode($t) {
 
 	    $w = '';
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
-		$c = mb_substr($data, $j, 1);
-		if (array_key_exists($c, $a2b)) {
-		    $w .= $a2b[$c];
-		} else {
-		    throw new Exception("unhandled $type character $c");
-		} /* if */
+		$w .= ueb_a2b(mb_substr($data, $j, 1));
 	    } /* for */
 	    $it .= $w;
 
@@ -157,12 +160,7 @@ function ueb_encode($t) {
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		$c = mb_substr($data, $j, 1);
 		if (array_key_exists($c, $n2a)) {
-		    $c = $n2a[$c];
-		    if (array_key_exists($c, $a2b)) {
-			$w .= $a2b[$c];
-		    } else {
-			throw new Exception("unhandled alpha character $c");
-		    } /* if */
+		    $w .= ueb_a2b($n2a[$c]);
 		} else {
 		    throw new Exception("unhandled digit $c");
 		} /* if */
