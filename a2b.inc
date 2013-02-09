@@ -71,7 +71,6 @@ function ueb_tokenize($s) {
 	    throw new Exception("OOPS... I don't know how to handle \"$s\"");
 	} /* if */
     } /* for */
-    print "RESULT: "; var_dump($tokens);
     return $tokens;
 } /* ueb_tokenize */
 
@@ -92,7 +91,6 @@ function ueb_encode($t) {
     for ($i = 0; $i < count($t); $i += 1) {
 	$type = $t[$i][0];
 	$data = $t[$i][1];
-	print "DEBUG: type=($type), data=($data)\n";
 
 	if ($type == 'alpha') {
 	    if ($mode_numeric) {
