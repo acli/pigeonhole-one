@@ -1,0 +1,6 @@
+Perl parser generator:
+(Should I even bother? If we're going the WordPress route we will be using PHP)
+http://cpan.mirror.clemson.edu/authors/id/F/FD/FDESAR/
+
+PHP parser generator:
+http://lime-php.sourceforge.net/
