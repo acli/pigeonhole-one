@@ -68,7 +68,7 @@ class Grade1TestCase extends UnitTestCase {
 	$this->assertEqual(translate_to_braille('C is for candy.'), '⠠⠉ ⠊⠎ ⠋⠕⠗ ⠉⠁⠝⠙⠽⠲');
     }
 
-    function test_braille_for_C_is_for_candy () {
+    function test_braille_for_Question_3c () {
 	# The Rules of Unified English Braille, p. 57
 	$this->assertEqual(translate_to_braille('Question 3c'), '⠠⠟⠥⠑⠎⠞⠊⠕⠝ ⠼⠉⠰⠉');
     }
