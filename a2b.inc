@@ -67,6 +67,9 @@ function ueb_tokenize($s) {
 	    # Punctuation that can occur in a numeric sequence
 	    array_push($tokens, array('punct1', $matches[1]));
 	    $s = $matches[2];
+	} elseif (preg_match('/^(.)(.*)$/u', $s, $matches)) {
+	    array_push($tokens, array('other', $matches[1]));
+	    $s = $matches[2];
 	} else {
 	    throw new Exception("OOPS... I don't know how to handle \"$s\"");
 	} /* if */
@@ -196,6 +199,16 @@ function ueb_encode($t) {
 		$mode_numeric = false;
 		$it .= $data;
 	    } /* if */
+
+	} elseif ($type == 'other') {
+	    $w = ueb_a2b($data);
+
+	    if ($mode_numeric) {
+		# Numeric mode self-terminates if the letter cannot be a digit.
+		# v. The Rules of Unified English Braille, §6.2.1 (p. 60)
+		$mode_numeric = false;
+	    } /* if */
+	    $it .= $w;
 
 	} else {
 	    throw new Exception("FIXME: unhandled type \"$type\"");
