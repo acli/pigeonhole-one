@@ -175,6 +175,7 @@ function ueb_encode($t) {
 		$mode_numeric = false;
 		$it .= $data;
 	    } /* if */
+
 	} else {
 	    throw new Exception("FIXME: unhandled type \"$type\"");
 	} /* if */
