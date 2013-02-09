@@ -37,6 +37,10 @@ class Grade1TestCase extends UnitTestCase {
 	$this->assertEqual(translate_to_braille('1a'), '⠼⠁⠰⠁');
     }
 
+    function test_braille_of_letter_capital_A() {
+	$this->assertEqual(translate_to_braille('A'), '⠠⠁');
+    }
+
 }
 
 ?>
