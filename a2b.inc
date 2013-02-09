@@ -71,6 +71,7 @@ function ueb_tokenize($s) {
 	    throw new Exception("OOPS... I don't know how to handle \"$s\"");
 	} /* if */
     } /* for */
+    var_dump($tokens);
     return $tokens;
 } /* ueb_tokenize */
 
