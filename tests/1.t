@@ -13,9 +13,9 @@ class Grade1TestCase extends UnitTestCase {
 	$this->assertEqual(count(ueb_tokenize('a')), 1);
     }
 
-#    function test_braille_of_letter_a() {
-#	$this->assertEqual(translate_to_braille('a'), '⠁');
-#    }
+    function test_braille_of_letter_a() {
+	$this->assertEqual(translate_to_braille('a'), '⠁');
+    }
 }
 
 ?>
