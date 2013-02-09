@@ -36,7 +36,7 @@ function ueb_read_data() {
 	    } /* if */
 	} /* for */
     } else {
-	die;
+	throw new Exception("Cannot open input file \"$input\"");
     }
     fclose($h);
 } /* ueb_read_data */
@@ -51,6 +51,9 @@ function ueb_tokenize($s) {
     while (mb_strlen($s)) {
 	if (preg_match('/^([a-z]+)(.*)$/u', $s, $matches)) {
 	    array_push($tokens, array('alpha', $matches[1]));
+	    $s = $matches[2];
+	} elseif (preg_match('/^([A-Z]+)(.*)$/u', $s, $matches)) {
+	    array_push($tokens, array('upper', $matches[1]));
 	    $s = $matches[2];
 	} elseif (preg_match('/^([0-9]+)(.*)$/u', $s, $matches)) {
 	    array_push($tokens, array('numeric', $matches[1]));
@@ -71,26 +74,38 @@ function ueb_encode($t) {
     global $a2b;
     global $n2a;
     $mode_numeric = false;
+    $mode_upper = false;
     $it = '';
     for ($i = 0; $i < count($t); $i += 1) {
 	$type = $t[$i][0];
 	$data = $t[$i][1];
 	print "DEBUG: type=($type), data=($data)\n";
 
-	if ($type == 'alpha') {
-	    if ($mode_numeric) {
-		$it .= '⠰';
-		$mode_numeric = false;
-	    } /* if */
+	if (($type == 'alpha' || $type == 'upper') && $mode_numeric) {
+	    $it .= '⠰';
+	    $mode_numeric = false;
+	} /* if */
 
+	if ($type == 'alpha') {
 	    $w = '';
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		$c = mb_substr($data, $j, 1);
 		if (array_key_exists($c, $a2b)) {
 		    $w .= $a2b[$c];
 		} else {
-		    print "OOPS, unhandled $type character $c\n";
-		    die;
+		    throw new Exception("unhandled $type character $c");
+		} /* if */
+	    } /* for */
+	    $it .= $w;
+
+	} elseif ($type == 'upper') {
+	    $w = '';
+	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
+		$c = mb_substr($data, $j, 1);
+		if (array_key_exists($c, $a2b)) {
+		    $w .= $a2b[$c];
+		} else {
+		    throw new Exception("unhandled $type character $c");
 		} /* if */
 	    } /* for */
 	    $it .= $w;
@@ -109,12 +124,10 @@ function ueb_encode($t) {
 		    if (array_key_exists($c, $a2b)) {
 			$w .= $a2b[$c];
 		    } else {
-			print "OOPS, unhandled alpha character $c\n";
-			die;
+			throw new Exception("unhandled alpha character $c");
 		    } /* if */
 		} else {
-		    print "OOPS, internal error, unhandled digit $c\n";
-		    die;
+		    throw new Exception("unhandled digit $c");
 		} /* if */
 	    } /* for */
 	    $it .= $w;
@@ -122,8 +135,7 @@ function ueb_encode($t) {
 	    $mode_numeric = false;
 	    $it .= $data;
 	} else {
-	    print "FIXME: unhandled type \"$type\"\n";
-	    die;
+	    throw new Exception("FIXME: unhandled type \"$type\"");
 	} /* if */
     } /* for */
     $mode_numeric = false;
