@@ -169,6 +169,10 @@ function ueb_encode($t) {
 
 	} elseif ($type == 'punct1') {
 	    # See The Rules of Unified English Braille, §6.2.1 (p. 60)
+	    if (!$mode_numeric && $i <= count($t) && $t[$i + 1][0] == 'numeric') {
+		$it .= '⠼';
+		$mode_numeric = true;
+	    } /* if */
 	    if ($mode_numeric && $i <= count($t) && $t[$i + 1][0] == 'numeric') {
 		for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		    $c = mb_substr($data, $j, 1);
