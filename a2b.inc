@@ -64,8 +64,7 @@ function ueb_tokenize($s) {
 	    array_push($tokens, array('space', $matches[1]));
 	    $s = $matches[2];
 	} else {
-	    print "OOPS... I don't know how to handle \"$s\"\n";
-	    die;
+	    throw new Exception("OOPS... I don't know how to handle \"$s\"");
 	} /* if */
     } /* for */
     print "RESULT: "; var_dump($tokens);
