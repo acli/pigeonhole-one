@@ -1,3 +1,18 @@
+==Status==
+===Encoder===
+The encoder should now be able to output Grade 1 UEB;
+however, it is not a full encoder and not all characters are supported.
+
+The encoder is currently not a proper class.
+While functionality would not demand it,
+further progress if we want to explore Grade 2 territory seems to.
+
+On the issue of Grade 2, UEB seems to be more semantic than Unicode
+and at this point I really doubt automatic translation
+from Unicode text (or even Unicode HTML or even DAISY) to UEB is possible.
+If you have something to comment on this thought
+please leave your comments on [http://incd.ambroseli.ca/node/51 my blog].
+
 ==Bibliography==
 
 Round Table on Information Access for People with Print Disability,
