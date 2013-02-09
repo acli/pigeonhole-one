@@ -83,6 +83,11 @@ class Grade1TestCase extends UnitTestCase {
 	$this->assertEqual(translate_to_braille('4 500 000'), '⠼⠙⠐⠑⠚⠚⠐⠚⠚⠚');
     }
 
+    function test_braille_for_ab_slash_cd () {
+	# The Rules of Unified English Braille, p. 17
+	$this->assertEqual(translate_to_braille('ab/cd'), '⠁⠃⠸⠌⠉⠙');
+    }
+
 }
 
 ?>
