@@ -81,12 +81,16 @@ function ueb_encode($t) {
 	$data = $t[$i][1];
 	print "DEBUG: type=($type), data=($data)\n";
 
-	if (($type == 'alpha' || $type == 'upper') && $mode_numeric) {
-	    $it .= '⠰';
-	    $mode_numeric = false;
-	} /* if */
-
 	if ($type == 'alpha') {
+	    if ($mode_numeric) {
+		# Numeric mode self-terminates if the letter cannot be a digit.
+		# v. The Rules of Unified English Braille, §6.2.1 (p. 60)
+		if (in_array(mb_substr($data, 0, 1), $n2a, true)) {
+		    $it .= '⠰';
+		} /* if */
+		$mode_numeric = false;
+	    } /* if */
+
 	    $w = '';
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		$c = mb_substr($data, $j, 1);
@@ -99,6 +103,12 @@ function ueb_encode($t) {
 	    $it .= $w;
 
 	} elseif ($type == 'upper') {
+	    if ($mode_numeric) {
+		# Numeric mode self-terminates on a capital letter indicator.
+		# v. The Rules of Unified English Braille, §6.2.1 (p. 60)
+		$mode_numeric = false;
+	    } /* if */
+
 	    # Look ahead to see if we can lock the shift state
 	    $all_caps = true;
 	    for ($j = $i; $j < count($t); $j += 1) {
