@@ -20,6 +20,11 @@ class Grade1TestCase extends UnitTestCase {
     function test_braille_for_the_quick_brown_fox_jumps_over_the_lazy_dog () {
 	$this->assertEqual(translate_to_braille('the quick brown fox jumps over the lazy dog'), '⠞⠓⠑ ⠟⠥⠊⠉⠅ ⠃⠗⠕⠺⠝ ⠋⠕⠭ ⠚⠥⠍⠏⠎ ⠕⠧⠑⠗ ⠞⠓⠑ ⠇⠁⠵⠽ ⠙⠕⠛');
     }
+
+    function test_braille_of_digit_1() {
+	$this->assertEqual(translate_to_braille('1'), '⠼⠁');
+    }
+
 }
 
 ?>
