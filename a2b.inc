@@ -166,6 +166,7 @@ function ueb_encode($t) {
 		} /* if */
 	    } /* for */
 	    $it .= $w;
+
 	} elseif ($type == 'space') {
 	    # See The Rules of Unified English Braille, §6.2.1 (p. 60)
 	    if ($mode_numeric && $i <= count($t) && $t[$i + 1][0] == 'numeric') {
