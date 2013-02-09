@@ -21,18 +21,20 @@ function ueb_read_data() {
     $input = 'a2b.txt';
     $h = fopen($input, 'r');
     $re_data_line = '/^(\S+)\t(\S+)(?:\s*)$/u';
-    $re_comment_line = '/^\s*(?:[#;][^\t]*)$/u';
+    $re_comment_line = '/^\s*(?:[#;][^\t]*)?$/u';
     if ($h) {
+	$lc = 0;
 	for (;;) {
 	    $s = fgets($h);
 	if ($s === false) { break; }
+	    $lc += 1;
 	    $s = rtrim($s);
 	    if (preg_match($re_data_line, $s, $matches)) {
 		$a2b[$matches[1]] = $matches[2];
 	    } elseif (preg_match($re_comment_line, $s)) {
 		;
 	    } else {
-		error_log("$input: Malformed data line");
+		error_log("$input:$lc: Malformed data line");
 	    } /* if */
 	} /* for */
     } else {
