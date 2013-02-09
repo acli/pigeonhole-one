@@ -1,4 +1,6 @@
 <?php
+/* vi: set sw=4 ai sm: */
+/* vim: set filetype=php: */
 
 #$dot_locator_for_use = '⠐⠐⠿';
 
