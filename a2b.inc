@@ -20,7 +20,7 @@ function ueb_read_data() {
     global $a2b;
     $input = 'a2b.txt';
     $h = fopen($input, 'r');
-    $re_data_line = '/^(\S+)\t(\S+)(?:\s*)$/u';
+    $re_data_line = '/^(\S+)\t(\S+)(?:\s*)(?:\s[#;].*)?$/u';
     $re_comment_line = '/^\s*(?:[#;][^\t]*)?$/u';
     if ($h) {
 	$lc = 0;
@@ -31,6 +31,7 @@ function ueb_read_data() {
 	    $s = rtrim($s);
 	    if (preg_match($re_data_line, $s, $matches)) {
 		$a2b[$matches[1]] = $matches[2];
+		print "DEBUG: defined ($matches[1])\n";
 	    } elseif (preg_match($re_comment_line, $s)) {
 		;
 	    } else {
@@ -63,9 +64,13 @@ function ueb_tokenize($s) {
 	} elseif (preg_match('/^(\s+)(.*)$/u', $s, $matches)) {
 	    array_push($tokens, array('space', $matches[1]));
 	    $s = $matches[2];
-	} elseif (preg_match('/^([\.,\/])(.*)$/u', $s, $matches)) {
+	} elseif (preg_match('/^([\.,])(.*)$/u', $s, $matches)) {
 	    # Punctuation that can occur in a numeric sequence
 	    array_push($tokens, array('punct1', $matches[1]));
+	    $s = $matches[2];
+	} elseif (preg_match('/^([\/])(.*)$/u', $s, $matches)) {
+	    # Punctuation that can occur in a numeric sequence
+	    array_push($tokens, array('punct2', $matches[1]));
 	    $s = $matches[2];
 	} elseif (preg_match('/^(.)(.*)$/u', $s, $matches)) {
 	    array_push($tokens, array('other', $matches[1]));
@@ -74,7 +79,6 @@ function ueb_tokenize($s) {
 	    throw new Exception("OOPS... I don't know how to handle \"$s\"");
 	} /* if */
     } /* for */
-    var_dump($tokens);
     return $tokens;
 } /* ueb_tokenize */
 
@@ -97,6 +101,7 @@ function ueb_encode($t) {
 	$data = $t[$i][1];
 
 	if ($type == 'alpha') {
+	    print "DEBUG: mode_numeric=$mode_numeric, data=($data)\n";
 	    if ($mode_numeric) {
 		# Numeric mode self-terminates if the letter cannot be a digit.
 		# v. The Rules of Unified English Braille, §6.2.1 (p. 60)
@@ -169,13 +174,17 @@ function ueb_encode($t) {
 	    } /* for */
 	    $it .= $w;
 
-	} elseif ($type == 'punct1') {
+	} elseif ($type == 'punct1' || $type == 'punct2') {
 	    # See The Rules of Unified English Braille, §6.2.1 (p. 60)
-	    if (!$mode_numeric && $i <= count($t) && $t[$i + 1][0] == 'numeric') {
+	    if ($type == 'punct1' && !$mode_numeric && $i <= count($t) && $t[$i + 1][0] == 'numeric') {
 		$it .= '⠼';
 		$mode_numeric = true;
 	    } /* if */
-	    if ($mode_numeric && $i <= count($t) && $t[$i + 1][0] == 'numeric') {
+	    if ($mode_numeric && (
+			($type == 'punct2' && $i <= count($t)
+					   && $t[$i + 1][0] == 'numeric')
+		     || ($type == 'punct1'))) {
+
 		for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		    $c = mb_substr($data, $j, 1);
 		    if ($c == '/') {

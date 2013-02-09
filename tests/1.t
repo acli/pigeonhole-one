@@ -93,6 +93,22 @@ class Grade1TestCase extends UnitTestCase {
 	$this->assertEqual(translate_to_braille('l__f'), '⠇⠨⠤⠨⠤⠋');
     }
 
+    function test_braille_for_report3_doc () {
+	# The Rules of Unified English Braille, p. 62
+	$this->assertEqual(translate_to_braille('report3.doc'), '⠗⠑⠏⠕⠗⠞⠼⠉⠲⠰⠙⠕⠉');
+    }
+
+    function test_braille_for_report3_xls () {
+	# The Rules of Unified English Braille, p. 62
+	$this->assertEqual(translate_to_braille('report3.xls'), '⠗⠑⠏⠕⠗⠞⠼⠉⠲⠭⠇⠎');
+    }
+
+    # This is grade 2
+#    function test_braille_for_If_I_go_1st_will_you_go_2nd () {
+#	# The Rules of Unified English Braille, p. 63
+#	$this->assertEqual(translate_to_braille('If you go 1st—will I go 2nd?'), '⠠⠊⠋ ⠽ ⠛ ⠼⠁⠎⠞⠠⠤⠺ ⠠⠊ ⠛ ⠼⠃⠝⠙⠦');
+#    }
+
 }
 
 ?>
