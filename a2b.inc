@@ -99,11 +99,32 @@ function ueb_encode($t) {
 	    $it .= $w;
 
 	} elseif ($type == 'upper') {
+	    # Look ahead to see if we can lock the shift state
+	    $all_caps = true;
+	    for ($j = $i; $j < count($t); $j += 1) {
+		$chk_type = $t[$j][0];
+		$chk_data = $t[$j][1];
+	    if ($chk_type == 'space') { break; }
+		if ($chk_type == 'alpha') {
+		    $all_caps = false;
+		} /* if */
+	    if (!$all_caps) { break; }
+	    } /* for */
+
 	    $w = '';
+
+	    if ($all_caps && mb_strlen($data) > 1) {
+		$w .= '⠠⠠';
+	    } else {
+		$all_caps = false;	/* reset $all_caps if length = 1 */
+	    } /* if */
+
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		$c = mb_strtolower(mb_substr($data, $j, 1));
 		if (array_key_exists($c, $a2b)) {
-		    $w .= '⠠';
+		    if (!$all_caps) {
+			$w .= '⠠';
+		    } /* if */
 		    $w .= $a2b[$c];
 		} else {
 		    throw new Exception("unhandled $type character $c");
