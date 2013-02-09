@@ -31,7 +31,6 @@ function ueb_read_data() {
 	    $s = rtrim($s);
 	    if (preg_match($re_data_line, $s, $matches)) {
 		$a2b[$matches[1]] = $matches[2];
-		print "DEBUG: defined ($matches[1])\n";
 	    } elseif (preg_match($re_comment_line, $s)) {
 		;
 	    } else {
@@ -101,7 +100,6 @@ function ueb_encode($t) {
 	$data = $t[$i][1];
 
 	if ($type == 'alpha') {
-	    print "DEBUG: mode_numeric=$mode_numeric, data=($data)\n";
 	    if ($mode_numeric) {
 		# Numeric mode self-terminates if the letter cannot be a digit.
 		# v. The Rules of Unified English Braille, §6.2.1 (p. 60)
