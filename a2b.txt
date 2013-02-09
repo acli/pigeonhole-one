@@ -31,7 +31,21 @@ z	⠵
 /	⠸⠌
 _	⠨⠤
 
+# 1.3.3
+
+
 # symbols
+# cf. section 3 p. 19
+′	⠶	# prime
+′	⠶⠶	# double prime
+~	⠈⠔	# swung dash
+#	⠸⠹
++	⠐⠖
+=	⠐⠶
+×	⠐⠦
+÷	⠐⠌
+%	⠨⠴
+
 &	⠈⠯
 *	⠐⠔
 †	⠈⠠⠹
