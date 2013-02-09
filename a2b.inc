@@ -101,8 +101,9 @@ function ueb_encode($t) {
 	} elseif ($type == 'upper') {
 	    $w = '';
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
-		$c = mb_substr($data, $j, 1);
+		$c = mb_strtolower(mb_substr($data, $j, 1));
 		if (array_key_exists($c, $a2b)) {
+		    $w .= '⠠';
 		    $w .= $a2b[$c];
 		} else {
 		    throw new Exception("unhandled $type character $c");
