@@ -109,6 +109,16 @@ class Grade1TestCase extends UnitTestCase {
 #	$this->assertEqual(translate_to_braille('If you go 1st—will I go 2nd?'), '⠠⠊⠋ ⠽ ⠛ ⠼⠁⠎⠞⠠⠤⠺ ⠠⠊ ⠛ ⠼⠃⠝⠙⠦');
 #    }
 
+    function test_braille_for_U_S_A_ () {
+	# The Rules of Unified English Braille, p. 70
+	$this->assertEqual(translate_to_braille('U.S.A.'), '⠠⠥⠲⠠⠎⠲⠠⠁⠲');
+    }
+
+    function test_braille_for_2_point_5_percent () {
+	# The Rules of Unified English Braille, p. 70
+	$this->assertEqual(translate_to_braille('2.5%'), '⠼⠃⠲⠑⠨⠴');
+    }
+
 }
 
 ?>
