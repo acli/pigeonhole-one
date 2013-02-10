@@ -2,8 +2,8 @@
 /* vi: set sw=4 ai sm: */
 /* vim: set filetype=php: */
 
-include 'a2b.inc';
-include 'messages.inc';
+require_once 'a2b.inc';
+require_once 'messages.inc';
 
 ob_start('mb_output_handler');
 

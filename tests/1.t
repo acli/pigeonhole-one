@@ -3,7 +3,7 @@
 /* vim: set filetype=php: */
 
 require_once('simpletest/autorun.php');
-include 'a2b.inc';
+require_once 'a2b.inc';
 
 class Grade1TestCase extends UnitTestCase {
 
