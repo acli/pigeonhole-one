@@ -17,6 +17,11 @@ class TestB2D extends UnitTestCase {
 	$this->assertEqual($t->dots_in_cell(' '), array());
     }
 
+    function test_dots_in_a_should_be_1() {
+	$t = new PigeonDots();
+	$this->assertEqual($t->dots_in_cell('⠁'), array(1));
+    }
+
 }
 
 ?>
