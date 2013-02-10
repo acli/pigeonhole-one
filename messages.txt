@@ -1,10 +1,10 @@
 #1:Lorem ipsum dolor sit amet
-2:feel between the lines\nempty walls will say something\nthat touch only hears
+2:feel between the lines / empty walls will say something / that touch only hears
 #3:Design is not about making things up. Correct design is a portrayal of reality, a form clearly and exactly expressing a function. Understand the reality, and you’ll understand how to design for it.:John McWade
 3:We need to put ourselves into positions where we are comfortable for being uncomfortable.:Gaby Brink
 3:The next 50 years will belong to the most creative problem seekers.:Christopher Simmons
 3:Imagine the solution and not just frame, frame, frame the problem.:Susana Rodriguez de Tembelque
-4;We see more with our eyes than hearing people do.:Tracy Bell and Jenny Stenner
+4:We see more with our eyes than hearing people do.:Tracy Bell and Jenny Stenner
 #4:A combination of art, science, and common sense, design is simply an intention with a purpose.:Shashi Caan
 4:It is not a question of why universal design is important, but the fact that *design* is by nature universal.:Shashi Caan
 #4:Given the reality of diversity of age and ability worldwide in the 21st century, inclusive design is at the core of a socially sustainable practice.:Valerie Fletcher
