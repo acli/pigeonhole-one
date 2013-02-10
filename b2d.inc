@@ -38,6 +38,17 @@ class PigeonDots {
 	return $it;
     } /* dots_in_cell */
 
+    public function dots_in_string($s) {
+	$it = array();
+
+	$n = mb_strlen($s, 'utf-8');
+	for ($i = 0; $i < $n; $i += 1) {
+	    $c = mb_substr($s, $i, 1, 'utf-8');
+	    array_push($it, $this->dots_in_cell($c));
+	} /* for */
+	return $it;
+    } /* dots_in_string */
+
 } /* PigeonDots */
 
 ?>
