@@ -1,4 +1,6 @@
 ==Status==
+This is a [32 Pigeons](http://gniw.ca/32pigeons) project.
+
 ===Encoder===
 The encoder should now be able to output Grade 1 UEB;
 however, it is not a full encoder and not all characters are supported.
