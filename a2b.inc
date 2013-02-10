@@ -2,6 +2,8 @@
 /* vi: set sw=4 ai sm: */
 /* vim: set filetype=php: */
 
+require_once 'data.inc';
+
 class PigeonUEB {
 
 const dot_locator_for_use = '⠐⠐⠿';
@@ -24,37 +26,10 @@ var $n2a = array(
 
 function __construct($grade = 2) {
     if (gettype($this->a2b) != 'array' || count($this->a2b) == 0) {
-	$this->a2b = $this->read_data('a2b.txt');
+	$this->a2b = read_data('a2b.txt');
     } /* if */
     $this->grade = $grade;
 } /* __construct */
-
-function read_data($input) {
-    $it = array();
-    $h = fopen($input, 'r');
-    $re_data_line = '/^(\S+)\t(\S+)(?:\s*)(?:\s[#;].*)?$/u';
-    $re_comment_line = '/^\s*(?:[#;][^\t]*)?$/u';
-    if ($h) {
-	$lc = 0;
-	for (;;) {
-	    $s = fgets($h);
-	if ($s === false) { break; }
-	    $lc += 1;
-	    $s = rtrim($s);
-	    if (preg_match($re_data_line, $s, $matches)) {
-		$it[$matches[1]] = $matches[2];
-	    } elseif (preg_match($re_comment_line, $s)) {
-		;
-	    } else {
-		error_log("$input:$lc: Malformed data line");
-	    } /* if */
-	} /* for */
-    } else {
-	throw new Exception("Cannot open input file \"$input\"");
-    }
-    fclose($h);
-    return $it;
-} /* read_data */
 
 public function ueb_tokenize($s) {
     $tokens = array();
