@@ -1,5 +1,5 @@
 ==Status==
-This is a [32 Pigeons](http://gniw.ca/32pigeons) project.
+This is a [http://gniw.ca/32pigeons 32 Pigeons] project.
 
 ===Encoder===
 The encoder should now be able to output Grade 1 UEB;
