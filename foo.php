@@ -6,8 +6,6 @@ require_once 'a2b.inc';
 require_once 'b2d.inc';
 require_once 'messages.inc';
 
-ob_start('mb_output_handler');
-
 $t = new PigeonUEB(1);
 $d = new PigeonDots();
 
@@ -18,8 +16,18 @@ foreach (read_messages() as $data) {
     $message = sprintf(($attribution? '“%s” – %s': '%s'), $quote, $attribution);
     $braille = $t->translate_to_braille($message);
     $dots = $d->dots_in_string($braille);
-    print "$message\n";
+
+    foreach ($dots as $dots_in_cell) {
+	sleep(5);
+	if (count($dots_in_cell) > 0) {
+	    print join(', ', $dots_in_cell) . "\n";
+	} else {
+	    print "blank\n";
+	} /* if */
+    } /* foreach */
+
     print "$braille\n";
+    print "$message\n";
 } /* foreach */
 
 
