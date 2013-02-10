@@ -11,6 +11,21 @@ from Unicode text (or even Unicode HTML or even DAISY) to UEB is possible.
 If you have something to comment on this thought
 please leave your comments on [http://incd.ambroseli.ca/node/51 my blog].
 
+===Decoder===
+It looks like we will need a decoder.
+
+===Dot manipulation routines===
+We can map a braille cell into a list of dots.
+But we cannot yet do the reverse.
+
+More pressing is some logic that will calculate the blind movements
+from the current set of dots and the next set of dots.
+This will tie in to the control mechanism.
+
+===Planner/Scheduler===
+This is further into the future,
+although this is just as urgent as the rest of the pieces.
+
 ==Bibliography==
 
 Round Table on Information Access for People with Print Disability,
