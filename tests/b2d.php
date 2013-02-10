@@ -12,6 +12,11 @@ class TestB2D extends UnitTestCase {
 	$this->assertTrue(method_exists($t, 'dots_in_cell'));
     }
 
+    function test_space_should_have_zero_dots() {
+	$t = new PigeonDots();
+	$this->assertEqual($t->dots_in_cell(' '), array());
+    }
+
 }
 
 ?>
