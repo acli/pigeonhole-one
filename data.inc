@@ -2,7 +2,7 @@
 /* vi: set sw=4 ai sm: */
 /* vim: set filetype=php: */
 
-function read_data($input) {
+function read_tab_separated_data($input) {
     $it = array();
     $h = fopen($input, 'r');
     $re_data_line = '/^(\S+)\t(\S+)(?:\s*)(?:\s[#;].*)?$/u';
@@ -27,6 +27,6 @@ function read_data($input) {
     }
     fclose($h);
     return $it;
-} /* read_data */
+} /* read_tab_separated_data */
 
 ?>

@@ -26,7 +26,7 @@ var $n2a = array(
 
 function __construct($grade = 2) {
     if (gettype($this->a2b) != 'array' || count($this->a2b) == 0) {
-	$this->a2b = read_data('a2b.txt');
+	$this->a2b = read_tab_separated_data('a2b.txt');
     } /* if */
     $this->grade = $grade;
 } /* __construct */
