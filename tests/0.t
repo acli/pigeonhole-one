@@ -8,11 +8,13 @@ include 'a2b.inc';
 class BaseTestCase extends UnitTestCase {
 
     function test_existence_of_function_translate_to_braille() {
-	$this->assertTrue(function_exists('translate_to_braille'));
+	$t = new PigeonUEB();
+        $this->assertTrue(method_exists($t, 'translate_to_braille'));
     }
 
     function test_braille_of_null_string() {
-	$this->assertEqual(translate_to_braille(''), '');
+	$t = new PigeonUEB();
+	$this->assertEqual($t->translate_to_braille(''), '');
     }
 }
 

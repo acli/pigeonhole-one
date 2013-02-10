@@ -2,10 +2,14 @@
 /* vi: set sw=4 ai sm: */
 /* vim: set filetype=php: */
 
-#$dot_locator_for_use = '⠐⠐⠿';
+class PigeonUEB {
 
-$a2b = array();
-$n2a = array(
+const dot_locator_for_use = '⠐⠐⠿';
+
+public $grade = 2;
+
+var $a2b = array();
+var $n2a = array(
 	'1' => 'a',
 	'2' => 'b',
 	'3' => 'c',
@@ -18,9 +22,15 @@ $n2a = array(
 	'0' => 'j',
     );
 
-function ueb_read_data() {
-    global $a2b;
-    $input = 'a2b.txt';
+function __construct($grade = 2) {
+    if (gettype($this->a2b) != 'array' || count($this->a2b) == 0) {
+	$this->a2b = $this->read_data('a2b.txt');
+    } /* if */
+    $this->grade = $grade;
+} /* __construct */
+
+function read_data($input) {
+    $it = array();
     $h = fopen($input, 'r');
     $re_data_line = '/^(\S+)\t(\S+)(?:\s*)(?:\s[#;].*)?$/u';
     $re_comment_line = '/^\s*(?:[#;][^\t]*)?$/u';
@@ -32,7 +42,7 @@ function ueb_read_data() {
 	    $lc += 1;
 	    $s = rtrim($s);
 	    if (preg_match($re_data_line, $s, $matches)) {
-		$a2b[$matches[1]] = $matches[2];
+		$it[$matches[1]] = $matches[2];
 	    } elseif (preg_match($re_comment_line, $s)) {
 		;
 	    } else {
@@ -43,14 +53,10 @@ function ueb_read_data() {
 	throw new Exception("Cannot open input file \"$input\"");
     }
     fclose($h);
-} /* ueb_read_data */
+    return $it;
+} /* read_data */
 
-# FIXME BEGIN
-ueb_read_data();
-ob_start('mb_output_handler');
-# FIXME END
-
-function ueb_tokenize($s) {
+public function ueb_tokenize($s) {
     $tokens = array();
     while (mb_strlen($s)) {
 	if (preg_match('/^([a-z]+)(.*)$/u', $s, $matches)) {
@@ -84,16 +90,13 @@ function ueb_tokenize($s) {
 } /* ueb_tokenize */
 
 function ueb_a2b($c) {
-    global $a2b;
-    if (!array_key_exists($c, $a2b)) {
+    if (!array_key_exists($c, $this->a2b)) {
 	throw new Exception("unhandled character $c");
     } /* if */
-    return $a2b[$c];
+    return $this->a2b[$c];
 } /* ueb_a2b */
 
-function ueb_encode($t) {
-    global $a2b;
-    global $n2a;
+public function ueb_encode($t) {
     $mode_numeric = false;
     $mode_upper = false;
     $it = '';
@@ -101,11 +104,15 @@ function ueb_encode($t) {
 	$type = $t[$i][0];
 	$data = $t[$i][1];
 
+	if ($this->grade != 1) {	# Allow any grade if null string passed
+	    throw new Exception("Unimplemented grade $this->grade");
+	} /* if */
+
 	if ($type == 'alpha') {
 	    if ($mode_numeric) {
 		# Numeric mode self-terminates if the letter cannot be a digit.
 		# v. The Rules of Unified English Braille, §6.2.1 (p. 60)
-		if (in_array(mb_substr($data, 0, 1), $n2a, true)) {
+		if (in_array(mb_substr($data, 0, 1), $this->n2a, true)) {
 		    $it .= '⠰';
 		} /* if */
 		$mode_numeric = false;
@@ -113,7 +120,7 @@ function ueb_encode($t) {
 
 	    $w = '';
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
-		$w .= ueb_a2b(mb_substr($data, $j, 1));
+		$w .= $this->ueb_a2b(mb_substr($data, $j, 1));
 	    } /* for */
 	    $it .= $w;
 
@@ -146,11 +153,11 @@ function ueb_encode($t) {
 
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		$c = mb_strtolower(mb_substr($data, $j, 1));
-		if (array_key_exists($c, $a2b)) {
+		if (array_key_exists($c, $this->a2b)) {
 		    if (!$all_caps) {
 			$w .= '⠠';
 		    } /* if */
-		    $w .= $a2b[$c];
+		    $w .= $this->a2b[$c];
 		} else {
 		    throw new Exception("unhandled $type character $c");
 		} /* if */
@@ -166,8 +173,8 @@ function ueb_encode($t) {
 	    $w = '';
 	    for ($j = 0; $j < mb_strlen($data); $j += 1) {
 		$c = mb_substr($data, $j, 1);
-		if (array_key_exists($c, $n2a)) {
-		    $w .= ueb_a2b($n2a[$c]);
+		if (array_key_exists($c, $this->n2a)) {
+		    $w .= $this->ueb_a2b($this->n2a[$c]);
 		} else {
 		    throw new Exception("unhandled digit $c");
 		} /* if */
@@ -190,13 +197,13 @@ function ueb_encode($t) {
 		    if ($c == '/') {
 			$it .= '⠌'; # FIXME
 		    } else {
-			$it .= ueb_a2b($c);
+			$it .= $this->ueb_a2b($c);
 		    } /* if */
 		} /* for */
 	    } else {
 		$mode_numeric = false;
 		for ($j = 0; $j < mb_strlen($data); $j += 1) {
-		    $it .= ueb_a2b(mb_substr($data, $j, 1));
+		    $it .= $this->ueb_a2b(mb_substr($data, $j, 1));
 		} /* for */
 	    } /* if */
 
@@ -210,7 +217,7 @@ function ueb_encode($t) {
 	    } /* if */
 
 	} elseif ($type == 'other') {
-	    $w = ueb_a2b($data);
+	    $w = $this->ueb_a2b($data);
 
 	    if ($mode_numeric) {
 		# Numeric mode self-terminates if the letter cannot be a digit.
@@ -227,9 +234,11 @@ function ueb_encode($t) {
     return $it;
 }
 
-function translate_to_braille($s) {
-    $tokens = ueb_tokenize($s);
-    return ueb_encode($tokens);
+public function translate_to_braille($s) {
+    $tokens = $this->ueb_tokenize($s);
+    return $this->ueb_encode($tokens);
 }
+
+} /* PigeonUEB */
 
 ?>
