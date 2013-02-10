@@ -32,7 +32,7 @@ function read_tab_separated_data($input) {
 function read_colon_separated_data($input) {
     $it = array();
     $h = fopen($input, 'r');
-    $re_data_line = '/^(\d+):(.+?)(?::([^:]*))?$/u';
+    $re_data_line = '/^(\S+):\s*(.+?)(?::([^:]*))?$/u';
     $re_comment_line = '/^\s*(?:[#;][^\t]*)?$/u';
     if ($h) {
         $lc = 0;
