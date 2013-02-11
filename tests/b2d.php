@@ -37,6 +37,21 @@ class TestB2D extends UnitTestCase {
 	$this->assertEqual($t->dots_in_string('⠉⠁'), array(array(1, 4), array(1)));
     }
 
+    function test_expand_matrix_null() {
+	$t = new PigeonDots();
+	$this->assertEqual($t->expand(array()), array(0, 0, 0, 0, 0, 0));
+    }
+
+    function test_expand_matrix_4() {
+	$t = new PigeonDots();
+	$this->assertEqual($t->expand(array(4)), array(0, 0, 0, 1, 0, 0));
+    }
+
+    function test_expand_matrix_45() {
+	$t = new PigeonDots();
+	$this->assertEqual($t->expand(array(4, 5)), array(0, 0, 0, 1, 1, 0));
+    }
+
     function test_diff_matrix_null_null() {
 	$t = new PigeonDots();
 	$this->assertEqual($t->diff_matrix(array(), array()), array(0, 0, 0, 0, 0, 0));

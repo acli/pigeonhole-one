@@ -49,6 +49,21 @@ class PigeonDots {
 	return $it;
     } /* dots_in_string */
 
+    public function expand($a) {
+	$it = array(0, 0, 0, 0, 0, 0);
+	foreach ($a as $i) {
+	    if ($i >= 1 && $i <= 6) {
+		$it[$i - 1] = 1;
+	    } /* if */
+	} /* foreach */
+	return $it;
+    } /* expand */
+
+    public function diff_matrix($a0, $b0) {
+	$a = $this->expand($a0);
+	$b = $this->expand($b0);
+    } /* diff_matrix */
+
 } /* PigeonDots */
 
 ?>
