@@ -17,6 +17,8 @@ foreach (read_messages() as $data) {
     $braille = $t->translate_to_braille($message);
     $dots = $d->dots_in_string($braille);
 
+    $t_0 = time();
+
     foreach ($dots as $dots_in_cell) {
 	sleep(5);
 	if (count($dots_in_cell) > 0) {
@@ -28,6 +30,9 @@ foreach (read_messages() as $data) {
 
     print "$braille\n";
     print "$message\n";
+
+    $dt = time() - $t_0;
+    print "[$dt s were spent transmitting this message.]\n";
 } /* foreach */
 
 
