@@ -60,8 +60,13 @@ class PigeonDots {
     } /* expand */
 
     public function diff_matrix($a0, $b0) {
+	$it = array(0, 0, 0, 0, 0, 0);
 	$a = $this->expand($a0);
 	$b = $this->expand($b0);
+	for ($i = 0; $i < 6; $i += 1) {
+	    $it[$i] = $a[$i] - $b[$i];
+	} /* for */
+	return $it;
     } /* diff_matrix */
 
 } /* PigeonDots */
