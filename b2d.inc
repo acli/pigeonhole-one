@@ -64,7 +64,7 @@ class PigeonDots {
 	$a = $this->expand($a0);
 	$b = $this->expand($b0);
 	for ($i = 0; $i < 6; $i += 1) {
-	    $it[$i] = $a[$i] - $b[$i];
+	    $it[$i] = $b[$i] - $a[$i];
 	} /* for */
 	return $it;
     } /* diff_matrix */
