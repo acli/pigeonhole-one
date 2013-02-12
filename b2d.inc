@@ -50,12 +50,16 @@ class PigeonDots {
     } /* dots_in_string */
 
     public function expand($a) {
-	$it = array(0, 0, 0, 0, 0, 0);
-	foreach ($a as $i) {
-	    if ($i >= 1 && $i <= 6) {
-		$it[$i - 1] = 1;
-	    } /* if */
-	} /* foreach */
+	if (count($a) == 6) { /* FIXME - assuming 6-elem ary already expanded */
+	    $it = $a;
+	} else {
+	    $it = array(0, 0, 0, 0, 0, 0);
+	    foreach ($a as $i) {
+		if ($i >= 1 && $i <= 6) {
+		    $it[$i - 1] = 1;
+		} /* if */
+	    } /* foreach */
+	} /* if */
 	return $it;
     } /* expand */
 
