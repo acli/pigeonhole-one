@@ -6,6 +6,7 @@ require_once 'a2b.inc';
 require_once 'b2d.inc';
 require_once 'messages.inc';
 require_once 'scan_order.inc';
+require_once 'en_words.inc';
 
 $t = new PigeonUEB(1);
 $d = new PigeonDots;
@@ -14,54 +15,27 @@ $iter = new PigeonScanOrder(PigeonScanOrder::SCAN_ORDER_BRAILLE());
 $number_of_windows = 3;
 $estimated_time_needed_for_state_change = 5;
 
-$numerals = array(
-    1 => 'one',
-    2 => 'two',
-    3 => 'three',
-    4 => 'four',
-    5 => 'five',
-    6 => 'six'
-);
-
-function numeral($n) {
-    global $numerals;
-    return $numerals[$n];
-} /* numeral */
-
-function time_pp($t) {
-    $tmp = array();
-    $tmp['h'] = floor($t/3600);
-    $tmp['min'] = floor($t/60)%60;
-    $tmp['s'] = $t - 3600*$tmp['h'] - 60*$tmp['min'];
-    $it = '';
-    foreach ($tmp as $unit => $n) {
-	if ($n) {
-	    if ($it) {
-		$it .= ' ';
-	    } /* if */
-	    $it .= "$n $unit";
-	} /* if */
-    } /* foreach */
-    return $it? $it: '0 s';
-} /* time_pp */
-
 function movement_descriptor($dots, $direction_label) {
     $message = '';
     if (count($dots) == 1) {
 	$message = sprintf('blind %s is going %s',
-		numeral($dots[0]), $direction_label);
+		PigeonWords::numeral($dots[0]), $direction_label);
     } elseif (count($dots) == 2) {
 	$message = sprintf('blinds %s and %s are going %s',
-		numeral($dots[0]), numeral($dots[1]), $direction_label);
+		PigeonWords::numeral($dots[0]),
+		PigeonWords::numeral($dots[1]),
+		$direction_label);
     } elseif (count($dots) > 2) {
 	for ($i = 0; $i < count($dots) - 1; $i += 1) {
 	    if ($i > 0) {
 		$message .= ', ';
 	    } /* if */
-	    $message .= numeral($dots[$i]);
+	    $message .= PigeonWords::numeral($dots[$i]);
 	} /* for */
 	$message = sprintf('blinds %s and %s are going %s',
-		$message, numeral($dots[count($dots) - 1]), $direction_label);
+		$message,
+		PigeonWords::numeral($dots[count($dots) - 1]),
+		$direction_label);
     } /* if */
     return $message;
 }
@@ -98,7 +72,8 @@ function describe_blind_movements($movements) {
 
 function describe_braille_cell($dots_in_cell) {
     if (count($dots_in_cell) > 0) {
-	$description = ucfirst(join(', ', array_map(numeral, $dots_in_cell)) . '.');
+	$description = ucfirst(join(', ', array_map(PigeonWords::numeral,
+						    $dots_in_cell)) . '.');
     } else {
 	$description = "blank";
     } /* if */
@@ -152,7 +127,7 @@ foreach (read_messages() as $data) {
     foreach ($dots as $dots_in_cell) {
 	$debug_progress = $debug_pos/$debug_end;
 	$debug_progress_percent = floor(100*$debug_pos/$debug_end);
-	$debug_eta = $debug_pos? time_pp((time() - $t_0)/$debug_progress*(1 - $debug_progress)): 'unknown';
+	$debug_eta = $debug_pos? PigeonWords::time_qty_si((time() - $t_0)/$debug_progress*(1 - $debug_progress)): 'unknown';
 	print "% progress: $debug_pos/$debug_end ($debug_progress_percent%), eta: $debug_eta\n";
 
 	describe_state($state);
@@ -184,7 +159,7 @@ foreach (read_messages() as $data) {
     print "$braille\n";
     print "$message\n";
 
-    $dt_label = time_pp(time() - $t_0);
+    $dt_label = PigeonWords::time_qty_si(time() - $t_0);
     print "% $dt_label s were spent transmitting this message.\n";
 } /* foreach */
 
