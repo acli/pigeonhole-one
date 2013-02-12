@@ -23,25 +23,28 @@ $numerals = array(
     6 => 'six'
 );
 
-function movement_descriptor($dots, $direction_label) {
+function numeral($n) {
     global $numerals;
+    return $numerals[$n];
+} /* numeral */
 
+function movement_descriptor($dots, $direction_label) {
     $message = '';
     if (count($dots) == 1) {
 	$message = sprintf('blind %s going %s',
-		$numerals[$dots[0]], $direction_label);
+		numeral($dots[0]), $direction_label);
     } elseif (count($dots) == 2) {
 	$message = sprintf('blinds %s and %s going %s',
-		$numerals[$dots[0]], $numerals[$dots[1]], $direction_label);
+		numeral($dots[0]), numeral($dots[1]), $direction_label);
     } elseif (count($dots) > 2) {
 	for ($i = 0; $i < count($dots) - 1; $i += 1) {
 	    if ($i > 0) {
 		$message .= ', ';
 	    } /* if */
-	    $message .= $numerals[$dots[$i]];
+	    $message .= numeral($dots[$i]);
 	} /* for */
 	$message = sprintf('blinds %s and %s going %s',
-		$message, $numerals[$dots[count($dots) - 1]], $direction_label);
+		$message, numeral($dots[count($dots) - 1]), $direction_label);
     } /* if */
     return $message;
 }
@@ -80,10 +83,7 @@ function describe_blind_movements($movements) {
 
 function describe_braille_cell($dots_in_cell) {
     if (count($dots_in_cell) > 0) {
-	$description = ucfirst(join(', ', array_map(function ($n) {
-		    global $numerals;
-		    return $numerals[$n];
-		}, $dots_in_cell)) . '.');
+	$description = ucfirst(join(', ', array_map(numeral, $dots_in_cell)) . '.');
     } else {
 	$description = "blank";
     } /* if */
