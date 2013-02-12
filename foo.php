@@ -147,6 +147,8 @@ foreach (read_messages() as $data) {
     $debug_pos = 0;
     $debug_end = count($dots);
 
+    print "% message: $braille ($message)\n";
+
     foreach ($dots as $dots_in_cell) {
 	$debug_progress = $debug_pos/$debug_end;
 	$debug_progress_percent = floor(100*$debug_pos/$debug_end);
