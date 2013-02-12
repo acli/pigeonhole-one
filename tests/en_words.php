@@ -36,6 +36,38 @@ class TestEnglishWords extends UnitTestCase {
 	PigeonWords::numeral(-123456789);
     }
 
+    function test_0s() {
+	$this->assertEqual(PigeonWords::time_qty_si(0), '0 s');
+    }
+
+    function test_1s() {
+	$this->assertEqual(PigeonWords::time_qty_si(1), '1 s');
+    }
+
+    function test_59s() {
+	$this->assertEqual(PigeonWords::time_qty_si(59), '59 s');
+    }
+
+    function test_60s() {
+	$this->assertEqual(PigeonWords::time_qty_si(60), '1 min');
+    }
+
+    function test_61s() {
+	$this->assertEqual(PigeonWords::time_qty_si(61), '1 min 1 s');
+    }
+
+    function test_3600s() {
+	$this->assertEqual(PigeonWords::time_qty_si(3600), '1 h');
+    }
+
+    function test_3601s() {
+	$this->assertEqual(PigeonWords::time_qty_si(3601), '1 h 1 s');
+    }
+
+    function test_3661s() {
+	$this->assertEqual(PigeonWords::time_qty_si(3661), '1 h 1 min 1 s');
+    }
+
 }
 
 ?>
