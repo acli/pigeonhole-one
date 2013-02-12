@@ -68,8 +68,6 @@ function describe_blind_movements($movements) {
     $ups_message = movement_descriptor($ups, 'up');
     $downs_message = movement_descriptor($downs, 'down');
 
-    print "% DEBUG: ups_message=($ups_message), downs_message=($downs_message)\n";
-
     if ($ups_message && $downs_message) {
 	print "Narrator: You see $ups_message, and $downs_message.\n";
     } elseif ($ups_message) {
@@ -89,6 +87,32 @@ function describe_braille_cell($dots_in_cell) {
     } /* if */
     print "Captioner: $description\n";
 } /* describe_braille_cell */
+
+function pretend_to_do_mechanical_control($movements) {
+    $comment = '';
+    for ($i = 0; $i < count($movements); $i += 1) {
+	if ($movements[$i] && $comment) {
+	    $comment .= ', ';
+	} /* if */
+	$action_label = ($movements[$i] < 0)? 'up':
+			($movements[$i] > 0? 'down': '');
+	if ($action_label) {
+	    $amount = (float) abs($movements[$i]);
+	    $amount_label = (1 == $amount)? 'fully':
+			    (0.5 == $amount? 'halfway': $amount);
+	    $comment .= sprintf('move blind %d %s %s',
+		    $i + 1, $amount_label, $action_label);
+	} /* if */
+    } /* for */
+    if (!$comment) {
+	$comment = 'none';
+    } /* if */
+    print "% actions: $comment\n";
+} /* pretend_to_do_mechanical_control */
+
+function emulate_delay($t) {
+    usleep($t*1000000);
+} /* emulate_delay */
 
 ob_implicit_flush(TRUE);
 
@@ -120,10 +144,12 @@ foreach (read_messages() as $data) {
 		$movements = array($delta[$p]);
 	    } else {
 		array_push($movements, $delta[$p]);
-	    }
+	    } /* if */
 	    if ($j + 1 == 6 || $k + 1 == $number_of_windows) {
+		pretend_to_do_mechanical_control($movements);
+		emulate_delay($estimated_time_needed_for_state_change*0.1);
 		describe_blind_movements($movements);
-		sleep($estimated_time_needed_for_state_change);
+		emulate_delay($estimated_time_needed_for_state_change*0.4);
 	    } /* if */
 	} /* for */
 	describe_braille_cell($dots_in_cell);
