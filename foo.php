@@ -23,13 +23,34 @@ $numerals = array(
     6 => 'six'
 );
 
+function movement_descriptor($dots, $direction_label) {
+    global $numerals;
+
+    $message = '';
+    if (count($dots) == 1) {
+	$message = sprintf('blind %s going %s',
+		$numerals[$dots[0]], $direction_label);
+    } elseif (count($dots) == 2) {
+	$message = sprintf('blinds %s and %s going %s',
+		$numerals[$dots[0]], $numerals[$dots[1]], $direction_label);
+    } elseif (count($dots) > 2) {
+	for ($i = 0; $i < count($dots) - 1; $i += 1) {
+	    if ($i > 0) {
+		$message .= ', ';
+	    } /* if */
+	    $message .= $numerals[$dots[$i]];
+	} /* for */
+	$message = sprintf('blinds %s and %s going %s',
+		$message, $numerals[$dots[count($dots) - 1]], $direction_label);
+    } /* if */
+    return $message;
+}
+
 function describe_state($s0) {
     ;
 } /* describe_state */
 
 function describe_blind_movements($movements) {
-    global $numerals;
-
     $ups = array();
     $downs = array();
 
@@ -37,44 +58,14 @@ function describe_blind_movements($movements) {
 	if ($movements[$i] < 0) {
 	    array_push($ups, $i + 1);
 	} elseif ($movements[$i] > 0) {
-	    array_push($downs, $i += 1);
+	    array_push($downs, $i + 1);
 	} /* if */
     } /* for */
 
-    $ups_message = '';
-    $downs_message = '';
+    $ups_message = movement_descriptor($ups, 'up');
+    $downs_message = movement_descriptor($downs, 'down');
 
-    if (count($ups) == 1) {
-	$ups_message = sprintf('blind %s going up', $numerals[$ups[0]]);
-    } elseif (count($ups) == 2) {
-	$ups_message = sprintf('blinds %s and %s going up',
-		$numerals[$ups[0]], $numerals[$ups[1]]);
-    } elseif (count($ups) > 2) {
-	for ($i = 0; $i < count($ups) - 1; $i += 1) {
-	    if ($i > 0) {
-		$ups_message .= ', ';
-	    } /* if */
-	    $ups_message .= $ups[$i];
-	} /* for */
-	$ups_message = sprintf('blinds %s and %s going up',
-		$ups_message, $numerals[$ups[count($ups) - 1]]);
-    } /* if */
-
-    if (count($downs) == 1) {
-	$downs_message = sprintf('blind %s going down', $numerals[$downs[0]]);
-    } elseif (count($downs) == 2) {
-	$downs_message = sprintf('blinds %s and %s going down',
-		$numerals[$downs[0]], $numerals[$downs[1]]);
-    } elseif (count($downs) > 2) {
-	for ($i = 0; $i < count($downs) - 1; $i += 1) {
-	    if ($i > 0) {
-		$downs_message .= ', ';
-	    } /* if */
-	    $downs_message .= $downs[$i];
-	} /* for */
-	$downs_message = sprintf('blinds %s and %s going down',
-		$downs_message, $numerals[$downs[count($downs) - 1]]);
-    } /* if */
+    print "% DEBUG: ups_message=($ups_message), downs_message=($downs_message)\n";
 
     if ($ups_message && $downs_message) {
 	print "Narrator: You see $ups_message, and $downs_message.\n";
