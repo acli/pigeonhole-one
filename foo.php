@@ -12,14 +12,21 @@ $t = new PigeonUEB(1);
 $d = new PigeonDots;
 $iter = new PigeonScanOrder(PigeonScanOrder::SCAN_ORDER_BRAILLE());
 
-$number_of_windows = 3;
+$number_of_windows = 1;
 $estimated_time_needed_for_state_change = 5;
 
 function movement_descriptor($dots, $direction_label) {
+    global $number_of_windows;
+
     $message = '';
     if (count($dots) == 1) {
-	$message = sprintf('blind %s is going %s',
-		PigeonWords::numeral($dots[0]), $direction_label);
+	if ($number_of_windows == 1) {
+	    $blind_label = 'the blind';
+	} else {
+	    $blind_label = 'blind ' . PigeonWords::numeral($dots[0]);
+	} /* if */
+	$message = sprintf('%s is going %s',
+		$blind_label, $direction_label);
     } elseif (count($dots) == 2) {
 	$message = sprintf('blinds %s and %s are going %s',
 		PigeonWords::numeral($dots[0]),
@@ -45,6 +52,8 @@ function describe_state($s0) {
 } /* describe_state */
 
 function describe_blind_movements($movements) {
+    global $number_of_windows;
+
     $ups = array();
     $downs = array();
 
@@ -66,7 +75,9 @@ function describe_blind_movements($movements) {
     } elseif ($downs_message) {
 	printf("Narrator: %s.\n", ucfirst($downs_message));
     } else {
-	print "Narrator: Blinds are not moving.\n";
+	var_dump($number_of_windows);
+	printf("Narrator: %s not moving.\n",
+		($number_of_windows == 1? 'The blind is': 'Blinds are'));
     } /* if */
 } /* describe_blind_movements */
 
