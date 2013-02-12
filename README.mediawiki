@@ -5,10 +5,15 @@ This is a [http://gniw.ca/32pigeons 32 Pigeons] project.
 The encoder should now be able to output Grade 1 UEB;
 however, it is not a full encoder and not all characters are supported.
 
-On the issue of Grade 2, UEB seems to be more semantic than Unicode
+Grade 2 is not supported,
+which might be a serious issue in this project
+in the sense that it will take far too long for any encoded message to be sent.
+However, on the issue of Grade 2,
+there is also the (in a general sense much more important) problem that
+UEB seems to be more semantic than Unicode
 and at this point I really doubt automatic translation
 from Unicode text (or even Unicode HTML or even DAISY) to UEB is possible.
-If you have something to comment on this thought
+If you have something to comment on this
 please leave your comments on [http://incd.ambroseli.ca/node/51 my blog].
 
 ===Decoder===
@@ -18,13 +23,22 @@ It looks like we will need a decoder.
 We can map a braille cell into a list of dots.
 But we cannot yet do the reverse.
 
-More pressing is some logic that will calculate the blind movements
-from the current set of dots and the next set of dots.
-This will tie in to the control mechanism.
+Given the current cell pattern and our target cell pattern,
+we can calculate the set of blind movements to get there.
+However, depending on how the serialization and/or inter-process communications
+turn out to be,
+this particular way of doing the calculation might not turn out to be relevant.
 
 ===Planner/Scheduler===
 This is further into the future,
 although this is just as urgent as the rest of the pieces.
+
+==Gaps==
+===Tests===
+Tests are missing in some testable modules,
+and some functions
+(that are currently in that temporary file called foo.php)
+need to be properly pulled into files so that they can be tested.
 
 ==Bibliography==
 
