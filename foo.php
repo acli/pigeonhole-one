@@ -28,6 +28,23 @@ function numeral($n) {
     return $numerals[$n];
 } /* numeral */
 
+function time_pp($t) {
+    $tmp = array();
+    $tmp['h'] = floor($t/3600);
+    $tmp['min'] = floor($t/60)%60;
+    $tmp['s'] = $t - 3600*$tmp['h'] - 60*$tmp['min'];
+    $it = '';
+    foreach ($tmp as $unit => $n) {
+	if ($n) {
+	    if ($it) {
+		$it .= ' ';
+	    } /* if */
+	    $it .= "$n $unit";
+	} /* if */
+    } /* foreach */
+    return $it? $it: '0 s';
+} /* time_pp */
+
 function movement_descriptor($dots, $direction_label) {
     $message = '';
     if (count($dots) == 1) {
@@ -131,7 +148,11 @@ foreach (read_messages() as $data) {
     $debug_end = count($dots);
 
     foreach ($dots as $dots_in_cell) {
-	print "% progress: " . $debug_pos . "/" . $debug_end . "\n";
+	$debug_progress = $debug_pos/$debug_end;
+	$debug_progress_percent = floor(100*$debug_pos/$debug_end);
+	$debug_eta = $debug_pos? time_pp((time() - $t_0)/$debug_progress*(1 - $debug_progress)): 'unknown';
+	print "% progress: $debug_pos/$debug_end ($debug_progress_percent%), eta: $debug_eta\n";
+
 	describe_state($state);
 	$delta = $d->diff_matrix($state, $dots_in_cell);
 	print "% intent: [" . join(', ', $d->expand($state)) . '] -> [' . join(', ', $d->expand($dots_in_cell)) . "]\n";
@@ -161,8 +182,8 @@ foreach (read_messages() as $data) {
     print "$braille\n";
     print "$message\n";
 
-    $dt = time() - $t_0;
-    print "% $dt s were spent transmitting this message.\n";
+    $dt_label = time_pp(time() - $t_0);
+    print "% $dt_label s were spent transmitting this message.\n";
 } /* foreach */
 
 
