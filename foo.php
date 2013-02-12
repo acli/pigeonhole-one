@@ -14,11 +14,22 @@ $iter = new PigeonScanOrder(PigeonScanOrder::SCAN_ORDER_BRAILLE());
 $number_of_windows = 3;
 $estimated_time_needed_for_state_change = 5;
 
+$numerals = array(
+    1 => 'one',
+    2 => 'two',
+    3 => 'three',
+    4 => 'four',
+    5 => 'five',
+    6 => 'six'
+);
+
 function describe_state($s0) {
     ;
 } /* describe_state */
 
 function describe_blind_movements($movements) {
+    global $numerals;
+
     $ups = array();
     $downs = array();
 
@@ -34,9 +45,10 @@ function describe_blind_movements($movements) {
     $downs_message = '';
 
     if (count($ups) == 1) {
-	$ups_message = sprintf('blind %d going up', $ups[0]);
+	$ups_message = sprintf('blind %s going up', $numerals[$ups[0]]);
     } elseif (count($ups) == 2) {
-	$ups_message = sprintf('blinds %d and %d going up', $ups[0], $ups[1]);
+	$ups_message = sprintf('blinds %s and %s going up',
+		$numerals[$ups[0]], $numerals[$ups[1]]);
     } elseif (count($ups) > 2) {
 	for ($i = 0; $i < count($ups) - 1; $i += 1) {
 	    if ($i > 0) {
@@ -44,15 +56,15 @@ function describe_blind_movements($movements) {
 	    } /* if */
 	    $ups_message .= $ups[$i];
 	} /* for */
-	$ups_message = sprintf('blinds %s and %d going up',
-		$ups_message, $ups[count($ups) - 1]);
+	$ups_message = sprintf('blinds %s and %s going up',
+		$ups_message, $numerals[$ups[count($ups) - 1]]);
     } /* if */
 
     if (count($downs) == 1) {
-	$downs_message = sprintf('blind %d going down', $downs[0]);
+	$downs_message = sprintf('blind %s going down', $numerals[$downs[0]]);
     } elseif (count($downs) == 2) {
-	$downs_message = sprintf('blinds %d and %d going down',
-		$downs[0], $downs[1]);
+	$downs_message = sprintf('blinds %s and %s going down',
+		$numerals[$downs[0]], $numerals[$downs[1]]);
     } elseif (count($downs) > 2) {
 	for ($i = 0; $i < count($downs) - 1; $i += 1) {
 	    if ($i > 0) {
@@ -60,8 +72,8 @@ function describe_blind_movements($movements) {
 	    } /* if */
 	    $downs_message .= $downs[$i];
 	} /* for */
-	$downs_message = sprintf('blinds %s and %d going down',
-		$downs_message, $downs[count($downs) - 1]);
+	$downs_message = sprintf('blinds %s and %s going down',
+		$downs_message, $numerals[$downs[count($downs) - 1]]);
     } /* if */
 
     if ($ups_message && $downs_message) {
@@ -77,7 +89,10 @@ function describe_blind_movements($movements) {
 
 function describe_braille_cell($dots_in_cell) {
     if (count($dots_in_cell) > 0) {
-	$description = join(', ', $dots_in_cell);
+	$description = ucfirst(join(', ', array_map(function ($n) {
+		    global $numerals;
+		    return $numerals[$n];
+		}, $dots_in_cell)) . '.');
     } else {
 	$description = "blank";
     } /* if */
