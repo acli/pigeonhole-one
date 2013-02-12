@@ -31,10 +31,10 @@ function numeral($n) {
 function movement_descriptor($dots, $direction_label) {
     $message = '';
     if (count($dots) == 1) {
-	$message = sprintf('blind %s going %s',
+	$message = sprintf('blind %s is going %s',
 		numeral($dots[0]), $direction_label);
     } elseif (count($dots) == 2) {
-	$message = sprintf('blinds %s and %s going %s',
+	$message = sprintf('blinds %s and %s are going %s',
 		numeral($dots[0]), numeral($dots[1]), $direction_label);
     } elseif (count($dots) > 2) {
 	for ($i = 0; $i < count($dots) - 1; $i += 1) {
@@ -43,7 +43,7 @@ function movement_descriptor($dots, $direction_label) {
 	    } /* if */
 	    $message .= numeral($dots[$i]);
 	} /* for */
-	$message = sprintf('blinds %s and %s going %s',
+	$message = sprintf('blinds %s and %s are going %s',
 		$message, numeral($dots[count($dots) - 1]), $direction_label);
     } /* if */
     return $message;
@@ -69,13 +69,13 @@ function describe_blind_movements($movements) {
     $downs_message = movement_descriptor($downs, 'down');
 
     if ($ups_message && $downs_message) {
-	print "Narrator: You see $ups_message, and $downs_message.\n";
+	printf("Narrator: %s, and %s.\n", ucfirst($ups_message), $downs_message);
     } elseif ($ups_message) {
-	print "Narrator: You see $ups_message.\n";
+	printf("Narrator: %s.\n", ucfirst($ups_message));
     } elseif ($downs_message) {
-	print "Narrator: You see $downs_message.\n";
+	printf("Narrator: %s.\n", ucfirst($downs_message));
     } else {
-	print "Narrator: The blinds do not seem to be moving.\n";
+	print "Narrator: Blinds are not moving.\n";
     } /* if */
 } /* describe_blind_movements */
 
@@ -127,8 +127,11 @@ foreach (read_messages() as $data) {
     $dots = $d->dots_in_string($braille);
 
     $t_0 = time();
+    $debug_pos = 0;
+    $debug_end = count($dots);
 
     foreach ($dots as $dots_in_cell) {
+	print "% progress: " . $debug_pos . "/" . $debug_end . "\n";
 	describe_state($state);
 	$delta = $d->diff_matrix($state, $dots_in_cell);
 	print "% intent: [" . join(', ', $d->expand($state)) . '] -> [' . join(', ', $d->expand($dots_in_cell)) . "]\n";
@@ -139,21 +142,20 @@ foreach (read_messages() as $data) {
 	    $iter->next(), $j += 1, $k = ($k + 1) % $number_of_windows
 	) {
 	    $p = $iter->scan_order[$j] - 1; # braille cell numbers are 1-based
-	    print "% DEBUG: j=$j, k=$k; p=$p\n";
 	    if ($k == 0) {
-		$movements = array($delta[$p]);
-	    } else {
-		array_push($movements, $delta[$p]);
+		$movements = array();
 	    } /* if */
+	    array_push($movements, $delta[$p]);
 	    if ($j + 1 == 6 || $k + 1 == $number_of_windows) {
 		pretend_to_do_mechanical_control($movements);
-		emulate_delay($estimated_time_needed_for_state_change*0.1);
+		emulate_delay($estimated_time_needed_for_state_change*0.2);
 		describe_blind_movements($movements);
-		emulate_delay($estimated_time_needed_for_state_change*0.4);
+		emulate_delay($estimated_time_needed_for_state_change*0.3);
 	    } /* if */
 	} /* for */
 	describe_braille_cell($dots_in_cell);
 	$state = $dots_in_cell;
+	$debug_pos += 1;
     } /* foreach */
 
     print "$braille\n";
