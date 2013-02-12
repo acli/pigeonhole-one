@@ -18,6 +18,20 @@ function describe_state($s0) {
     ;
 } /* describe_state */
 
+function describe_blind_movements($movements) {
+    if (in_array(1, $movements) || in_array(-1, $movements)) {
+	for ($w = 0; $w < $number_of_windows; $w += 1) {
+	    if ($movements[$w] > 0) {
+		printf("You see blind %d coming down\n", $w + 1);
+	    } elseif ($movements[$w] < 0) {
+		printf("You see blind %d going up\n", $w + 1);
+	    } /* if */
+	} /* for */
+    } else {
+	print "The blinds do not seem to be moving.\n";
+    } /* if */
+} /* describe_blind_movements */
+
 ob_implicit_flush(TRUE);
 
 $state = array();
@@ -50,17 +64,7 @@ foreach (read_messages() as $data) {
 		array_push($movements, $delta[$p]);
 	    }
 	    if ($j + 1 == 6 || $k + 1 == $number_of_windows) {
-		if (in_array(1, $movements) || in_array(-1, $movements)) {
-		    for ($w = 0; $w < $number_of_windows; $w += 1) {
-			if ($movements[$w] > 0) {
-			    printf("You see blind %d coming down\n", $w + 1);
-			} elseif ($movements[$w] < 0) {
-			    printf("You see blind %d going up\n", $w + 1);
-			} /* if */
-		    } /* for */
-		} else {
-		    print "The blinds do not seem to be moving.\n";
-		} /* if */
+		describe_blind_movements($movements);
 		sleep($estimated_time_needed_for_state_change);
 	    } /* if */
 	} /* for */
@@ -76,7 +80,7 @@ foreach (read_messages() as $data) {
     print "$message\n";
 
     $dt = time() - $t_0;
-    print "[$dt s were spent transmitting this message.]\n";
+    print "% $dt s were spent transmitting this message.\n";
 } /* foreach */
 
 
