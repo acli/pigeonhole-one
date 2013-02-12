@@ -32,7 +32,7 @@ class TestEnglishWords extends UnitTestCase {
     }
 
     function test_unimplemented() {
-	$this->expectException('Unimplemented');
+	$this->expectException('Exception');
 	PigeonWords::numeral(-123456789);
     }
 
