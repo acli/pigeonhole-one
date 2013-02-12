@@ -72,7 +72,7 @@ function describe_blind_movements($movements) {
 
 function describe_braille_cell($dots_in_cell) {
     if (count($dots_in_cell) > 0) {
-	$description = ucfirst(join(', ', array_map(PigeonWords::numeral,
+	$description = ucfirst(join(', ', array_map('PigeonWords::numeral',
 						    $dots_in_cell)) . '.');
     } else {
 	$description = "blank";

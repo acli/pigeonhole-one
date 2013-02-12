@@ -16,8 +16,7 @@ class PigeonWords {
     );
 
     function numeral($n) {
-	global $numerals;
-	return $numerals[$n];
+	return PigeonWords::$numerals[$n];
     } /* numeral */
 
     function time_qty_si($t) {
