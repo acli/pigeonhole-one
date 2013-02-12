@@ -41,10 +41,10 @@ function read_colon_separated_data($input) {
         if ($s === false) { break; }
             $lc += 1;
             $s = rtrim($s);
-            if (preg_match($re_data_line, $s, $matches)) {
-                array_push($it, array($matches[1], $matches[2], $matches[3]));
-            } elseif (preg_match($re_comment_line, $s)) {
+            if (preg_match($re_comment_line, $s)) {
                 ;
+            } elseif (preg_match($re_data_line, $s, $matches)) {
+                array_push($it, array($matches[1], $matches[2], $matches[3]));
             } else {
                 error_log("$input:$lc: Malformed data line");
             } /* if */
