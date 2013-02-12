@@ -7,7 +7,8 @@ however, it is not a full encoder and not all characters are supported.
 
 Grade 2 is not supported,
 which might be a serious issue in this project
-in the sense that it will take far too long for any encoded message to be sent.
+in the sense that
+it will take far too long for any Grade 1–encoded message to be sent.
 However, on the issue of Grade 2,
 there is also the (in a general sense much more important) problem that
 UEB seems to be more semantic than Unicode
