@@ -19,18 +19,70 @@ function describe_state($s0) {
 } /* describe_state */
 
 function describe_blind_movements($movements) {
-    if (in_array(1, $movements) || in_array(-1, $movements)) {
-	for ($w = 0; $w < $number_of_windows; $w += 1) {
-	    if ($movements[$w] > 0) {
-		printf("You see blind %d coming down\n", $w + 1);
-	    } elseif ($movements[$w] < 0) {
-		printf("You see blind %d going up\n", $w + 1);
+    $ups = array();
+    $downs = array();
+
+    for ($i = 0; $i < count($movements); $i += 1) {
+	if ($movements[$i] < 0) {
+	    array_push($ups, $i + 1);
+	} elseif ($movements[$i] > 0) {
+	    array_push($downs, $i += 1);
+	} /* if */
+    } /* for */
+
+    $ups_message = '';
+    $downs_message = '';
+
+    if (count($ups) == 1) {
+	$ups_message = sprintf('blind %d going up', $ups[0]);
+    } elseif (count($ups) == 2) {
+	$ups_message = sprintf('blinds %d and %d going up', $ups[0], $ups[1]);
+    } elseif (count($ups) > 2) {
+	for ($i = 0; $i < count($ups) - 1; $i += 1) {
+	    if ($i > 0) {
+		$ups_message .= ', ';
 	    } /* if */
+	    $ups_message .= $ups[$i];
 	} /* for */
+	$ups_message = sprintf('blinds %s and %d going up',
+		$ups_message, $ups[count($ups) - 1]);
+    } /* if */
+
+    if (count($downs) == 1) {
+	$downs_message = sprintf('blind %d going down', $downs[0]);
+    } elseif (count($downs) == 2) {
+	$downs_message = sprintf('blinds %d and %d going down',
+		$downs[0], $downs[1]);
+    } elseif (count($downs) > 2) {
+	for ($i = 0; $i < count($downs) - 1; $i += 1) {
+	    if ($i > 0) {
+		$downs_message .= ', ';
+	    } /* if */
+	    $downs_message .= $downs[$i];
+	} /* for */
+	$downs_message = sprintf('blinds %s and %d going down',
+		$downs_message, $downs[count($downs) - 1]);
+    } /* if */
+
+    if ($ups_message && $downs_message) {
+	print "Narrator: You see $ups_message, and $downs_message.\n";
+    } elseif ($ups_message) {
+	print "Narrator: You see $ups_message.\n";
+    } elseif ($downs_message) {
+	print "Narrator: You see $downs_message.\n";
     } else {
-	print "The blinds do not seem to be moving.\n";
+	print "Narrator: The blinds do not seem to be moving.\n";
     } /* if */
 } /* describe_blind_movements */
+
+function describe_braille_cell($dots_in_cell) {
+    if (count($dots_in_cell) > 0) {
+	$description = join(', ', $dots_in_cell);
+    } else {
+	$description = "blank";
+    } /* if */
+    print "Captioner: $description\n";
+} /* describe_braille_cell */
 
 ob_implicit_flush(TRUE);
 
@@ -68,11 +120,7 @@ foreach (read_messages() as $data) {
 		sleep($estimated_time_needed_for_state_change);
 	    } /* if */
 	} /* for */
-	if (count($dots_in_cell) > 0) {
-	    print join(', ', $dots_in_cell) . "\n";
-	} else {
-	    print "blank\n";
-	} /* if */
+	describe_braille_cell($dots_in_cell);
 	$state = $dots_in_cell;
     } /* foreach */
 
