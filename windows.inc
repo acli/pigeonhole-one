@@ -147,7 +147,7 @@ class PigeonWindows {
 	    $it = join(', ', array_slice($messages, 0, count($messages)))
 		    . ', and ' . $messages[count($messages) - 1];
 	} elseif (count($messages) == 2) {
-	    $it = join(', and ', $messages);
+	    $it = join('; ', $messages);
 	} elseif (count($messages)) {
 	    $it = $messages[0];
 	} else {
