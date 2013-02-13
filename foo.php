@@ -9,22 +9,30 @@ require_once 'scan_order.inc';
 require_once 'windows.inc';
 require_once 'en_words.inc';
 
-$t = new PigeonUEB(1);
-$d = new PigeonDots;
-
 $number_of_windows = 2;
 $estimated_time_needed_for_state_change = 5;
+$debug_comments_enabled = true;
+
+$t = new PigeonUEB(1);
+$d = new PigeonDots;
 
 $iter = new PigeonScanOrder($number_of_windows == 2?
 	PigeonScanOrder::SCAN_ORDER_LTR():
 	PigeonScanOrder::SCAN_ORDER_BRAILLE());
 $win = new PigeonWindows($number_of_windows);
 
+function d_log() {
+    global $debug_comments_enabled;
+    if ($debug_comments_enabled) {
+	printf("DEBUG: %s\n", call_user_func_array(sprintf, func_get_args()));
+    } /* if */
+} /* d_log */
+
 function describe_progress($debug_pos, $debug_end, $t_0) {
     $debug_progress = $debug_pos/$debug_end;
     $debug_progress_percent = floor(100*$debug_pos/$debug_end);
     $debug_eta = $debug_pos? PigeonWords::time_qty_si((time() - $t_0)/$debug_progress*(1 - $debug_progress)): 'unknown';
-    print "% progress: $debug_pos/$debug_end ($debug_progress_percent%), eta: $debug_eta\n";
+    d_log("progress: %d/%d (%d%%), eta: %s", $debug_pos, $debug_end, $debug_progress_percent, $debug_eta);
 } /* describe_progress */
 
 function describe_blind_movements($movements) {
@@ -66,7 +74,7 @@ function pretend_to_do_mechanical_control($movements) {
     if (!$comment) {
 	$comment = 'none';
     } /* if */
-    print "% actions: $comment\n";
+    d_log("actions: %s", $comment);
 } /* pretend_to_do_mechanical_control */
 
 function emulate_delay($t) {
@@ -92,7 +100,7 @@ foreach (read_messages() as $data) {
     $debug_pos = 0;
     $debug_end = count($dots);
 
-    print "% message: $braille ($message)\n";
+    d_log("message: %s (%s)", $braille, $message);
 
     foreach ($dots as $dots_in_cell) {
 	describe_progress($debug_pos, $debug_end, $t_0);
@@ -104,8 +112,8 @@ foreach (read_messages() as $data) {
 	    array_push($permuted_dots, $unpermuted_dots[$iter->current() - 1]);
 	} /* for */
 
-	print '% cell: [' . join(', ', $permuted_dots)
-		. '] for [' . join(', ', $unpermuted_dots) . "]\n";
+	d_log('cell: [%s] for [%s]', join(', ', $permuted_dots),
+		join(', ', $unpermuted_dots));
 
 	# Pad it with the inter-cell pattern
 	for (;;) {
@@ -119,8 +127,8 @@ foreach (read_messages() as $data) {
 	    for ($j = 0; $j < $number_of_windows; $j += 1) {
 		$target = array_slice($permuted_dots, $i, $number_of_windows);
 		$delta = $d->diff_matrix($state, $target);
-		print "% intent: [" . join(', ', $state) . "] -> [" . join(', ', $target) . "]\n";
-		print "% delta = [" . join(', ', $delta) . "]\n";
+		d_log("intent: [%s] -> [%s]", join(', ', $state), join(', ', $target));
+		d_log("delta = [%s]", join(', ', $delta));
 		pretend_to_do_mechanical_control($delta);
 		emulate_delay($estimated_time_needed_for_state_change*0.2);
 		describe_blind_movements($delta);
@@ -137,7 +145,7 @@ foreach (read_messages() as $data) {
     print "$message\n";
 
     $dt_label = PigeonWords::time_qty_si(time() - $t_0);
-    print "% $dt_label s were spent transmitting this message.\n";
+    d_log("%s s were spent transmitting this message.", $dt_label);
 } /* foreach */
 
 
