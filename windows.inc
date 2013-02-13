@@ -156,6 +156,7 @@ class PigeonWindows {
 			    'The blind is':
 			    'Blinds are'));
 	} /* if */
+	$it .= '.';
 	return $it;
     } /* describe_blind_movements */
 
