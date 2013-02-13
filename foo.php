@@ -21,12 +21,24 @@ $iter = new PigeonScanOrder($number_of_windows == 2?
 	PigeonScanOrder::SCAN_ORDER_BRAILLE());
 $win = new PigeonWindows($number_of_windows);
 
+function msg($label, $message) {
+    printf("%s  %s: %s\n", strftime('%H:%M:%S', time()), $label, $message);
+} /* labelled_message */
+
 function d_log() {
     global $debug_comments_enabled;
     if ($debug_comments_enabled) {
-	printf("DEBUG: %s\n", call_user_func_array(sprintf, func_get_args()));
+	msg('DEBUG', call_user_func_array(sprintf, func_get_args()));
     } /* if */
 } /* d_log */
+
+function narrate() {
+    msg('Narrator', call_user_func_array(sprintf, func_get_args()));
+} /* narrate */
+
+function caption() {
+    msg('Captioner', call_user_func_array(sprintf, func_get_args()));
+} /* caption */
 
 function describe_progress($debug_pos, $debug_end, $t_0) {
     $debug_progress = $debug_pos/$debug_end;
@@ -37,12 +49,12 @@ function describe_progress($debug_pos, $debug_end, $t_0) {
 
 function describe_blind_movements($movements) {
     global $win;
-    print "Narrator: " . $win->describe_blind_movements($movements) . "\n";
+    narrate($win->describe_blind_movements($movements));
 } /* describe_blind_movements */
 
 function describe_blinds($state, $delta) {
     global $win;
-    print "Narrator: " . ucfirst($win->describe_blinds($state, $delta)) . ".\n";
+    narrate(ucfirst($win->describe_blinds($state, $delta)));
 } /* describe_blind_movements */
 
 function describe_braille_cell($dots_in_cell) {
@@ -52,7 +64,7 @@ function describe_braille_cell($dots_in_cell) {
     } else {
 	$description = "blank";
     } /* if */
-    print "Captioner: $description\n";
+    caption($description);
 } /* describe_braille_cell */
 
 function pretend_to_do_mechanical_control($movements) {
@@ -82,6 +94,7 @@ function emulate_delay($t) {
 } /* emulate_delay */
 
 ob_implicit_flush(TRUE);
+date_default_timezone_set('EST5EDT');
 
 $state = array();
 for ($i = 0; $i < $number_of_windows; $i += 1) { /* Ruby is so much better... */
