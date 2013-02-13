@@ -3,6 +3,7 @@
 /* vim: set filetype=php: */
 
 require_once 'en_words.inc';
+require_once 'util.inc';
 
 class PigeonWindows {
 
@@ -42,7 +43,7 @@ class PigeonWindows {
 		    $verb_p,
 		    $complement);
 	} /* if */
-	return $message;
+	return str_replace('  ', ' ', $message);
     } /* describe_one_something */
 
     function describe_one_direction($dots, $direction_label) {
@@ -82,6 +83,8 @@ class PigeonWindows {
     } /* describe_blind_movements */
 
     function describe_blinds($state, $movements) {
+	$new_p = true;
+
 	$ups_static = array();
 	$ups_moved = array();
 	$downs_static = array();
@@ -111,54 +114,64 @@ class PigeonWindows {
 	    } /* if */
 	} /* for */
 
-	$ups_static_message = $this->describe_one_something($ups_static,
-		'remains', 'remain', 'rolled up');
-	$ups_moved_message = $this->describe_one_something($ups_moved,
-		'is', 'are', 'now rolled up');
-	$downs_static_message = $this->describe_one_something($downs_static,
-		'remains', 'remain', 'rolled down');
-	$downs_moved_message = $this->describe_one_something($downs_moved,
-		'is', 'are', 'now rolled down');
-	$sortofs_static_message = $this->describe_one_something($sortofs_static,
-		'remains', 'remain', 'halfway down');
-	$sortofs_moved_message = $this->describe_one_something($sortofs_moved,
-		'is', 'are', 'now halfway down');
-
 	$messages = array();
-	if ($ups_static_message) {
-	    array_push($messages, $ups_static_message);
+
+	if ($new_p) {
+	    $ups_message = $this->describe_one_something(
+		    array_merge($ups_static, $ups_moved),
+		    '', '', 'rolled up');
+	    $downs_message = $this->describe_one_something(
+		    array_merge($downs_static, $downs_moved),
+		    '', '', 'rolled down');
+	    $sortofs_message = $this->describe_one_something(
+		    array_merge($sortofs_static, $sortofs_moved),
+		    '', '', 'halfway down');
+
+	    array_push_if_nonempty($messages, $ups_message);
+	    array_push_if_nonempty($messages, $downs_message);
+	    array_push_if_nonempty($messages, $sortofs_message);
+
+	} else {
+	    $ups_static_message = $this->describe_one_something(
+		    $ups_static, 'remains', 'remain', 'rolled up');
+	    $ups_moved_message = $this->describe_one_something(
+		    $ups_moved, 'is', 'are', 'now rolled up');
+	    $downs_static_message = $this->describe_one_something(
+		    $downs_static, 'remains', 'remain', 'rolled down');
+	    $downs_moved_message = $this->describe_one_something(
+		    $downs_moved, 'is', 'are', 'now rolled down');
+	    $sortofs_static_message = $this->describe_one_something(
+		    $sortofs_static, 'remains', 'remain', 'halfway down');
+	    $sortofs_moved_message = $this->describe_one_something(
+		    $sortofs_moved, 'is', 'are', 'now halfway down');
+
+	    array_push_if_nonempty($messages, $ups_static_message);
+	    array_push_if_nonempty($messages, $ups_moved_message);
+	    array_push_if_nonempty($messages, $downs_static_message);
+	    array_push_if_nonempty($messages, $downs_moved_message);
+	    array_push_if_nonempty($messages, $sortofs_static_message);
+	    array_push_if_nonempty($messages, $sortofs_moved_message);
+
 	} /* if */
-	if ($ups_moved_message) {
-	    array_push($messages, $ups_moved_message);
-	} /* if */
-	if ($downs_static_message) {
-	    array_push($messages, $downs_static_message);
-	} /* if */
-	if ($downs_moved_message) {
-	    array_push($messages, $downs_moved_message);
-	} /* if */
-	if ($sortofs_static_message) {
-	    array_push($messages, $sortofs_static_message);
-	} /* if */
-	if ($sortofs_moved_message) {
-	    array_push($messages, $sortofs_moved_message);
-	} /* if */
+
 	if (count($messages) > 2) {
 	    $it = join(', ', array_slice($messages, 0, count($messages)))
 		    . ', and ' . $messages[count($messages) - 1];
 	} elseif (count($messages) == 2) {
-	    $it = join('; ', $messages);
+	    $it = join(($new_p? ', ': '; '), $messages);
 	} elseif (count($messages)) {
 	    $it = $messages[0];
 	} else {
-	    $it = sprintf("%s not moving.",
-		    ($this->number_of_windows == 1?
-			    'The blind is':
-			    'Blinds are'));
+	    throw new Exception('Internal error: No messages generated');
+	} /* if */
+
+	if ($new_p) {
+	    $it = 'You see ' . $it;
 	} /* if */
 	$it .= '.';
+
 	return $it;
-    } /* describe_blind_movements */
+    } /* describe_blinds */
 
 } /* PigeonWindows */
 
