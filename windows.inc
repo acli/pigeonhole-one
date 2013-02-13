@@ -21,6 +21,8 @@ class PigeonWindows {
 		$blind_label = 'blind ' . PigeonWords::numeral($dots[0]);
 	    } /* if */
 	    $message = sprintf('%s %s %s', $blind_label, $verb_s, $complement);
+	} elseif (count($dots) == $this->number_of_windows) {
+	    $message = sprintf('all the blinds %s %s', $verb_p, $complement);
 	} elseif (count($dots) == 2) {
 	    $message = sprintf('blinds %s and %s %s %s',
 		    PigeonWords::numeral($dots[0]),
@@ -64,7 +66,7 @@ class PigeonWindows {
 	$downs_message = $this->describe_one_direction($downs, 'down');
 
 	if ($ups_message && $downs_message) {
-	    $it = sprintf("%s, and %s.",
+	    $it = sprintf("%s, but %s.",
 		    ucfirst($ups_message), $downs_message);
 	} elseif ($ups_message) {
 	    $it = sprintf("%s.", ucfirst($ups_message));
