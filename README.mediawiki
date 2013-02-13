@@ -24,12 +24,6 @@ It looks like we will need a decoder.
 We can map a braille cell into a list of dots.
 But we cannot yet do the reverse.
 
-Given the current cell pattern and our target cell pattern,
-we can calculate the set of blind movements to get there.
-However, depending on how the serialization and/or inter-process communications
-turn out to be,
-this particular way of doing the calculation might not turn out to be relevant.
-
 ===Planner/Scheduler===
 This is further into the future,
 although this is just as urgent as the rest of the pieces.
