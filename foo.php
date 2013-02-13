@@ -11,11 +11,13 @@ require_once 'en_words.inc';
 
 $t = new PigeonUEB(1);
 $d = new PigeonDots;
-$iter = new PigeonScanOrder(PigeonScanOrder::SCAN_ORDER_BRAILLE());
 
-$number_of_windows = 1;
+$number_of_windows = 2;
 $estimated_time_needed_for_state_change = 5;
 
+$iter = new PigeonScanOrder($number_of_windows == 2?
+	PigeonScanOrder::SCAN_ORDER_LTR():
+	PigeonScanOrder::SCAN_ORDER_BRAILLE());
 $win = new PigeonWindows($number_of_windows);
 
 function describe_progress($debug_pos, $debug_end, $t_0) {
