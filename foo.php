@@ -11,7 +11,7 @@ require_once 'en_words.inc';
 
 $number_of_windows = 2;
 $estimated_time_needed_for_state_change = 5;
-$debug_comments_enabled = false;
+$debug_comments_enabled = true;
 
 $t = new PigeonUEB(1);
 $d = new PigeonDots;
@@ -137,18 +137,16 @@ foreach (read_messages() as $data) {
 	# Transmit the (permuted and padded) dot patterns
 	$n = count($permuted_dots);
 	for ($i = 0; $i < $n; $i += $number_of_windows) {
-	    for ($j = 0; $j < $number_of_windows; $j += 1) {
-		$target = array_slice($permuted_dots, $i, $number_of_windows);
-		$delta = $d->diff_matrix($state, $target);
-		d_log("intent: [%s] -> [%s]", join(', ', $state), join(', ', $target));
-		d_log("delta = [%s]", join(', ', $delta));
-		pretend_to_do_mechanical_control($delta);
-		emulate_delay($estimated_time_needed_for_state_change*0.2);
-		describe_blind_movements($delta);
-		emulate_delay($estimated_time_needed_for_state_change*0.3);
-		describe_blinds($target, $delta);
-		$state = $target;
-	    } /* for */
+	    $target = array_slice($permuted_dots, $i, $number_of_windows);
+	    $delta = $d->diff_matrix($state, $target);
+	    d_log("intent: [%s] -> [%s]", join(', ', $state), join(', ', $target));
+	    d_log("delta = [%s]", join(', ', $delta));
+	    pretend_to_do_mechanical_control($delta);
+	    emulate_delay($estimated_time_needed_for_state_change*0.2);
+	    describe_blind_movements($delta);
+	    emulate_delay($estimated_time_needed_for_state_change*0.3);
+	    describe_blinds($target, $delta);
+	    $state = $target;
 	} /* for */
 	describe_braille_cell($dots_in_cell);
 	$debug_pos += 1;
