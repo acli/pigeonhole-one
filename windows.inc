@@ -67,8 +67,14 @@ class PigeonWindows {
 	$downs_message = $this->describe_one_direction($downs, 'down');
 
 	if ($ups_message && $downs_message) {
-	    $it = sprintf("%s, but %s.",
-		    ucfirst($ups_message), $downs_message);
+	    if ($ups[0] < $downs[0]) {
+		$a = $ups_message;
+		$b = $downs_message;
+	    } else {
+		$a = $downs_message;
+		$b = $ups_message;
+	    } /* if */
+	    $it = sprintf("%s, but %s.", ucfirst($a), $b);
 	} elseif ($ups_message) {
 	    $it = sprintf("%s.", ucfirst($ups_message));
 	} elseif ($downs_message) {
