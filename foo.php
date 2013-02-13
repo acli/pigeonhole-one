@@ -11,7 +11,7 @@ require_once 'en_words.inc';
 
 $number_of_windows = 2;
 $estimated_time_needed_for_state_change = 5;
-$debug_comments_enabled = true;
+$debug_comments_enabled = false;
 
 $t = new PigeonUEB(1);
 $d = new PigeonDots;
