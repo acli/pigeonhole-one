@@ -30,9 +30,9 @@ function describe_blind_movements($movements) {
     print "Narrator: " . $win->describe_blind_movements($movements) . "\n";
 } /* describe_blind_movements */
 
-function describe_blinds($state) {
+function describe_blinds($state, $delta) {
     global $win;
-    print "Narrator: " . $win->describe_blinds($state) . "\n";
+    print "Narrator: " . ucfirst($win->describe_blinds($state, $delta)) . ".\n";
 } /* describe_blind_movements */
 
 function describe_braille_cell($dots_in_cell) {
@@ -123,7 +123,7 @@ foreach (read_messages() as $data) {
 		emulate_delay($estimated_time_needed_for_state_change*0.2);
 		describe_blind_movements($delta);
 		emulate_delay($estimated_time_needed_for_state_change*0.3);
-		describe_blinds($target);
+		describe_blinds($target, $delta);
 		$state = $target;
 	    } /* for */
 	} /* for */
