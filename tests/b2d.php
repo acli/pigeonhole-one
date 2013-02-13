@@ -52,6 +52,17 @@ class TestB2D extends UnitTestCase {
 	$this->assertEqual($t->expand(array(4, 5)), array(0, 0, 0, 1, 1, 0));
     }
 
+    function test_diff_matrix_mismatched_lengths() {
+	$t = new PigeonDots();
+	$this->expectException('Exception');
+	$t->diff_matrix(array(), array(1));
+    }
+
+    function test_diff_matrix_should_have_same_length_as_arguments() {
+	$t = new PigeonDots();
+	$this->assertEqual(count($t->diff_matrix(array(1), array(2))), 1);
+    }
+
     function test_diff_matrix_null_null() {
 	$t = new PigeonDots();
 	$this->assertEqual($t->diff_matrix($t->expand(array()),
