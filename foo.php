@@ -30,6 +30,11 @@ function describe_blind_movements($movements) {
     print "Narrator: " . $win->describe_blind_movements($movements) . "\n";
 } /* describe_blind_movements */
 
+function describe_blinds($state) {
+    global $win;
+    print "Narrator: " . $win->describe_blinds($state) . "\n";
+} /* describe_blind_movements */
+
 function describe_braille_cell($dots_in_cell) {
     if (count($dots_in_cell) > 0) {
 	$description = ucfirst(join(', ', array_map('PigeonWords::numeral',
@@ -118,6 +123,7 @@ foreach (read_messages() as $data) {
 		emulate_delay($estimated_time_needed_for_state_change*0.2);
 		describe_blind_movements($delta);
 		emulate_delay($estimated_time_needed_for_state_change*0.3);
+		describe_blinds($target);
 		$state = $target;
 	    } /* for */
 	} /* for */
