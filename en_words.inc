@@ -17,7 +17,7 @@ class PigeonWords {
 
     function numeral($n) {
 	if (!array_key_exists($n, PigeonWords::$numerals)) {
-	    throw new Exception('Unimplemented');
+	    throw new Exception("Unimplemented for $n");
 	} /* if */
 	return PigeonWords::$numerals[$n];
     } /* numeral */

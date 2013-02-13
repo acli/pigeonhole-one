@@ -13,7 +13,7 @@ $t = new PigeonUEB(1);
 $d = new PigeonDots;
 $iter = new PigeonScanOrder(PigeonScanOrder::SCAN_ORDER_BRAILLE());
 
-$number_of_windows = 3;
+$number_of_windows = 1;
 $estimated_time_needed_for_state_change = 5;
 
 $win = new PigeonWindows($number_of_windows);
@@ -22,6 +22,7 @@ function describe_progress($debug_pos, $debug_end, $t_0) {
     $debug_progress = $debug_pos/$debug_end;
     $debug_progress_percent = floor(100*$debug_pos/$debug_end);
     $debug_eta = $debug_pos? PigeonWords::time_qty_si((time() - $t_0)/$debug_progress*(1 - $debug_progress)): 'unknown';
+    print "% progress: $debug_pos/$debug_end ($debug_progress_percent%), eta: $debug_eta\n";
 } /* describe_progress */
 
 function describe_blind_movements($movements) {
@@ -68,6 +69,9 @@ function emulate_delay($t) {
 ob_implicit_flush(TRUE);
 
 $state = array();
+for ($i = 0; $i < $number_of_windows; $i += 1) { /* Ruby is so much better... */
+    array_push($state, 0);
+} /* for */
 
 foreach (read_messages() as $data) {
     $seq = $data[0];
@@ -85,30 +89,39 @@ foreach (read_messages() as $data) {
 
     foreach ($dots as $dots_in_cell) {
 	describe_progress($debug_pos, $debug_end, $t_0);
-	print "% progress: $debug_pos/$debug_end ($debug_progress_percent%), eta: $debug_eta\n";
 
-	$delta = $d->diff_matrix($state, $dots_in_cell);
-	print "% intent: [" . join(', ', $d->expand($state)) . '] -> [' . join(', ', $d->expand($dots_in_cell)) . "]\n";
-	print "% delta = [" . join(', ', $delta) . "]\n";
-	for (
-	    $i = $iter->rewind(), $j = 0, $k = 0;
-	    $i = $iter->valid();
-	    $iter->next(), $j += 1, $k = ($k + 1) % $number_of_windows
-	) {
-	    $p = $iter->scan_order[$j] - 1; # braille cell numbers are 1-based
-	    if ($k == 0) {
-		$movements = array();
-	    } /* if */
-	    array_push($movements, $delta[$p]);
-	    if ($j + 1 == 6 || $k + 1 == $number_of_windows) {
-		pretend_to_do_mechanical_control($movements);
+	# Permute the dots in case we are not using natural Braille order
+	$unpermuted_dots = $d->expand($dots_in_cell);
+	$permuted_dots = array();
+	for ($iter->rewind(); $iter->valid(); $iter->next()) {
+	    array_push($permuted_dots, $unpermuted_dots[$iter->current() - 1]);
+	} /* for */
+
+	print '% cell: [' . join(', ', $permuted_dots)
+		. '] for [' . join(', ', $unpermuted_dots) . "]\n";
+
+	# Pad it with the inter-cell pattern
+	for (;;) {
+	    array_push($permuted_dots, 0.5);
+	if (count($permuted_dots) % $number_of_windows == 0) { break; }
+	} /* for */
+
+	# Transmit the (permuted and padded) dot patterns
+	$n = count($permuted_dots);
+	for ($i = 0; $i < $n; $i += $number_of_windows) {
+	    for ($j = 0; $j < $number_of_windows; $j += 1) {
+		$target = array_slice($permuted_dots, $i, $number_of_windows);
+		$delta = $d->diff_matrix($state, $target);
+		print "% intent: [" . join(', ', $state) . "] -> [" . join(', ', $target) . "]\n";
+		print "% delta = [" . join(', ', $delta) . "]\n";
+		pretend_to_do_mechanical_control($delta);
 		emulate_delay($estimated_time_needed_for_state_change*0.2);
-		describe_blind_movements($movements);
+		describe_blind_movements($delta);
 		emulate_delay($estimated_time_needed_for_state_change*0.3);
-	    } /* if */
+		$state = $target;
+	    } /* for */
 	} /* for */
 	describe_braille_cell($dots_in_cell);
-	$state = $dots_in_cell;
 	$debug_pos += 1;
     } /* foreach */
 
