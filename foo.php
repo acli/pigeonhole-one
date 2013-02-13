@@ -9,7 +9,7 @@ require_once 'scan_order.inc';
 require_once 'windows.inc';
 require_once 'en_words.inc';
 
-$number_of_windows = 2;
+$number_of_windows = 1;
 $estimated_time_needed_for_state_change = 5;
 $debug_comments_enabled = false;
 
