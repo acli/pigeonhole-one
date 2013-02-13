@@ -63,11 +63,12 @@ class PigeonDots {
 	return $it;
     } /* expand */
 
-    public function diff_matrix($a0, $b0) {
+    public function diff_matrix($a, $b) {
 	$it = array(0, 0, 0, 0, 0, 0);
-	$a = $this->expand($a0);
-	$b = $this->expand($b0);
-	for ($i = 0; $i < 6; $i += 1) {
+	if (count($a) != count($b)) {
+	    throw new Exception('Cannot diff vectors of different lengths');
+	} /* if */
+	for ($i = 0; $i < count($a); $i += 1) {
 	    $it[$i] = $b[$i] - $a[$i];
 	} /* for */
 	return $it;
