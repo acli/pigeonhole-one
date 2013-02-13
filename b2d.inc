@@ -64,7 +64,7 @@ class PigeonDots {
     } /* expand */
 
     public function diff_matrix($a, $b) {
-	$it = array(0, 0, 0, 0, 0, 0);
+	$it = array();
 	if (count($a) != count($b)) {
 	    throw new Exception('Cannot diff vectors of different lengths');
 	} /* if */
