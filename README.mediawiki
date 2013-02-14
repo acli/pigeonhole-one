@@ -35,6 +35,12 @@ and some functions
 (that are currently in that temporary file called foo.php)
 need to be properly pulled into files so that they can be tested.
 
+===AJAX===
+It now looks like we will soon need
+* a server-side scheduler/messaging daemon,
+* a server-side AJAX responder, and
+* some client-side AJAX code.
+
 ==Bibliography==
 
 Round Table on Information Access for People with Print Disability,
