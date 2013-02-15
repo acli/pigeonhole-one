@@ -43,6 +43,12 @@ It now looks like we will soon need
 which means some of the temporary code in foo.php
 will soon need to be rewritten in Javascript.
 
+===Interprocess communications===
+There is also the more fundamental problem
+of how the different pieces of software can communicate between each other.
+We need to do this in a way that will not cause message loss
+(even if we encounter heavy traffic conditions, for example).
+
 ==Bibliography==
 
 Round Table on Information Access for People with Print Disability,
